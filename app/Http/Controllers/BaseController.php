@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\baseValidacion;
+use App\BaseValidacion;
 use App\Coordinaciones;
 use App\Validacion;
 
