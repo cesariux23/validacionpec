@@ -100,7 +100,7 @@
           <td>
             <h4>
             <span class=" label
-              @if($registro->cNivel =='primaria')
+              @if(strtolower($registro->nivel) =='primaria')
               {{'label-info'}}
               @else
               {{'label-primary'}}
@@ -113,7 +113,7 @@
           </td>
           <td>
             <b class="
-              @if($registro->cOportunidad =='Primera')
+              @if(strpos(strtolower($registro->cOportunidad),'primera')!== false)
               {{'text-success'}}
               @else
               {{'text-warning'}}

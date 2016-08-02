@@ -20,7 +20,7 @@
   <h3><b class="text-muted">{{$validacion->nombre." ".$validacion->paterno." ".$validacion->materno}}</b></h3>
     CZ {{$validacion->nombrecz}} --
     <span class=" label
-      @if($validacion->nivel =='primaria')
+      @if(strtolower($validacion->nivel) =='primaria')
       {{'label-info'}}
       @else
       {{'label-primary'}}
