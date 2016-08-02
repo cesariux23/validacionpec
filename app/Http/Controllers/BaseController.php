@@ -167,7 +167,7 @@ class BaseController extends Controller
 
         }
         $csv->insertOne(\Schema::getColumnListing('baseValidacion'));
-          $r=BaseValidacion::where('cEstatusCertificado','<>','Emitido')
+          $r=BaseValidacion::where('cEstatusCertificado','')
             ->rfe($request->input('cRFE'))
             ->paterno($request->input('cPaterno'))
             ->materno($request->input('cMaterno'))
