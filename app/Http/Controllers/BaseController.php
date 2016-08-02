@@ -51,7 +51,7 @@ class BaseController extends Controller
         $request->flash();
         $coordinaciones= Coordinaciones::lists('cNombreCZ','iCveCZ');
         $coordinaciones->prepend('--Todas las CZ --', '');
-        $base=BaseValidacion::>whereNull('cEstatusCertificado')
+        $base=BaseValidacion::where('cEstatusCertificado','')
           ->rfe($request->input('cRFE'))
           ->paterno($request->input('cPaterno'))
           ->materno($request->input('cMaterno'))
