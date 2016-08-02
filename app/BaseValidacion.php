@@ -87,7 +87,7 @@ class BaseValidacion extends Model
         if($this->dCalFinal >= 6){
           $val->acredito=1;
         }
-        if($val->nivel=='primaria')
+        if(strtolower($validacion->nivel)=='primaria')
           $val->certificado=1;
         //$val->valido=0;
         $val->rfe=$this->cRFE;

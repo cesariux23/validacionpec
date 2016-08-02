@@ -219,7 +219,7 @@
           <button type="button" name="curp" class="btn {{$validacion->curp? 'btn-success':'btn-default'}} check" value="{{$validacion->curp}}" onclick="postValidacion()"><i class="fa fa-{{$validacion->curp? 'check':'square-o'}}"></i></button>
         </td>
       </tr>
-      @if($validacion->nivel=='secundaria')
+      @if(strtolower($validacion->nivel)=='secundaria')
       <tr>
         <td>
           3
