@@ -37,6 +37,16 @@ class Validacion extends Model
         return $query;
       }
     }
+    public function validaTodo()
+    {
+      $this->datospersonales=1;
+      $this->curp=1;
+      $this->certificado=1;
+      $this->foto=1;
+      $this->autoevaluacion=1;
+      $this->terceros=1;
+      $this->aprendizaje=1;
+    }
 
 
 }

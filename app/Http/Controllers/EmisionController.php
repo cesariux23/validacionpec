@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Coordinaciones;
 use App\Validacion;
+use App\BaseValidacion;
+use App\Fechas;
 use Auth;
 
 class EmisionController extends Controller
@@ -25,14 +27,19 @@ class EmisionController extends Controller
         if(Auth::user()->rol<2){
           $request->flash();
           $coordinaciones= Coordinaciones::lists('cNombreCZ','iCveCZ');
+          $fechas= Fechas::lists('fConclusion','fConclusion');
           $coordinaciones->prepend('--Todas las CZ --', '');
-          $base=Validacion::where('valido',1)
+          //$fechas=array_shift($fechas);
+          $fechas->prepend('--Todas --', '');
+          $base=BaseValidacion::emitido($request->input('emitido'))
             ->rfe($request->input('rfe'))
             ->cz($request->input('nombrecz'))
             ->nivel($request->input('nivel'))
-            ->emitido($request->input('emitido'))
+            ->fecha($request->input('fecha'))
             ->paginate(20);
-          return view('certificado/index')->with(array('base'=>$base, 'coordinaciones'=>$coordinaciones));
+            //->tosql();
+            //dd($base);
+          return view('certificado/index')->with(array('base'=>$base, 'coordinaciones'=>$coordinaciones,'fechas'=>$fechas));
         }
         else{
           return view('errors/503');
@@ -109,5 +116,47 @@ class EmisionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function export(Request $request)
+    {
+        $csv = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
+        $titulo='Registros_emision_';
+        if($request->input('emitido')!==null){
+          switch ($request->input('emitido')) {
+            case '0':
+              $titulo .='_pendientes';
+              break;
+            case '1':
+              $titulo .='_emitidos';
+              break;
+            case '2':
+              $titulo .='_cancelados';
+              break;
+            default:
+              $titulo .='_todos';
+              break;
+          }
+        }
+          if($request->input('nombrecz')!=null){
+            $titulo .='_CZ'.$request->input('nombrecz');
+          }else{
+            $titulo .='_todasCZ';
+          }
+          //fecha
+          $titulo.=date('_dmyHis').'.csv';
+
+
+        $csv->insertOne(\Schema::getColumnListing('baseValidacion'));
+          $r=$base=BaseValidacion::emitido($request->input('emitido'))
+            ->rfe($request->input('rfe'))
+            ->cz($request->input('nombrecz'))
+            ->nivel($request->input('nivel'))
+            ->fecha($request->input('fecha'))
+            ->get();
+          $r->each(function($person) use($csv) {
+            $csv->insertOne($person->toArray());
+          });
+          $csv->output($titulo);
     }
 }

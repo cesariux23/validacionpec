@@ -30,9 +30,15 @@ Route::get('/base/export',
     'as' => 'base.export', 'uses' => 'BaseController@export'
   ]
 );
+Route::get('/emision/export',
+  [
+    'as' => 'emision.export', 'uses' => 'EmisionController@export'
+  ]
+);
 
 
 Route::resource('emision','EmisionController');
 Route::resource('validacion','ValidacionController');
 
-Route::get('/home', 'HomeController@index');
+Route::get('/importar', 'ImportarController@index');
+Route::post('/importar', 'ImportarController@index');

@@ -178,7 +178,7 @@
       </p>
     </div>
     <div class="col-xs-2">
-      <button type="button" class="btn btn-primary" onclick="marcarTodo()" id="todos"> <i class="fa fa-check-square-o fa-3x"></i></button>
+      <button type="submit" class="btn btn-primary"  name="todos" value="1"> <i class="fa fa-check-square-o fa-3x"></i></button>
     </div>
   </div>
 

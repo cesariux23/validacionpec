@@ -50,13 +50,15 @@
     </div>
   </div>
   {!! Form::close() !!}
-  <hr>
   <p>
     Resultados: {{$base->total()}} registros.
   </p>
   <table class="table">
     <thead>
       <tr>
+        <th>
+          Alta
+        </th>
         <th>
           CZ
         </th>
@@ -87,6 +89,9 @@
       @foreach ($base as $registro)
         <tr>
           <td>
+            <span class="text-muted">{{date_format( date_create($registro->fFechaAlta), 'd/M/y')}}</span>
+          </td>
+          <td>
             <b>{{$registro->iCveCZ}}</b> -- {{$registro->cNombreCZ}}
           </td>
           <td>
@@ -100,7 +105,7 @@
           <td>
             <h4>
             <span class=" label
-              @if(strtolower($registro->nivel) =='primaria')
+              @if(strpos(strtolower($registro->cNivel),'primaria')!== false)
               {{'label-info'}}
               @else
               {{'label-primary'}}
@@ -112,14 +117,12 @@
 
           </td>
           <td>
-            <b class="
-              @if(strpos(strtolower($registro->cOportunidad),'primera')!== false)
-              {{'text-success'}}
-              @else
-              {{'text-warning'}}
-              @endif
-              ">
-              {{$registro->cOportunidad}}
+            @if(strpos(strtolower($registro->cOportunidad),'primera')!== false)
+            <b class="text-success">Primera
+            @else
+            <b class="text-warning">{{$registro->cOportunidad}}
+            @endif
+          </b>
             </b>
           </td>
           <td>

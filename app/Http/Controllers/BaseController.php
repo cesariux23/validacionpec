@@ -157,6 +157,7 @@ class BaseController extends Controller
               $titulo .='_enSASA';
               break;
           }
+        }
           if($request->input('iCveCZ')!=null){
             $titulo .='_CZ'.$request->input('iCveCZ');
           }else{
@@ -164,8 +165,6 @@ class BaseController extends Controller
           }
           //fecha
           $titulo.=date('_dmyHis').'.csv';
-
-        }
         $csv->insertOne(\Schema::getColumnListing('baseValidacion'));
           $r=BaseValidacion::where('cEstatusCertificado','')
             ->rfe($request->input('cRFE'))

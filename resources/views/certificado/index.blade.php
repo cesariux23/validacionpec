@@ -5,6 +5,7 @@
   {!! Form::open(array('method' => 'get')) !!}
   <div>
     <div class="pull-right">
+      <a href="{{route('emision.export',['rfe' => old('rfe'),'nombrecz' => old('nombrecz'),'emitido' => old('emitido'),'calificacion' => old('nivel'),'fecha' => old('fecha')])}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i> Exportar</a>
       <a href="{{url('/emision?emitido=0')}}" class="btn btn-danger"><i class="fa fa-times"></i> Limpiar</a>
       <button type="submit" class="btn btn-info"><i class="fa fa-filter"></i> Filtar</button>
     </div>
@@ -26,10 +27,16 @@
     <div class="form-group col-md-2">
       <div class="form-group">
         <label>estado del certificado</label>
-        {!! Form::select('emitido', array(''=>'-- Todos --', '0' => 'Pendiente', '1' => 'Emitido','2' => 'Cancelado'),null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
+        {!! Form::select('emitido', array('t'=>'-- Todos --', '0' => 'Pendiente', '1' => 'Emitido','2' => 'Cancelado'),null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
       </div>
     </div>
     <div class="form-group col-md-2">
+      <div class="form-group">
+        <label>Fecha de conclusión</label>
+        {!! Form::select('fecha', $fechas,null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
+      </div>
+    </div>
+    <div class="form-group col-md-3">
       <div class="form-group">
         <label>RFE</label>
         {!! Form::text('rfe',null,array('class'=>'form-control'))!!}
@@ -37,10 +44,15 @@
     </div>
   </div>
   {!! Form::close() !!}
-  <hr>
+  <p>
+    Resultados: {{$base->total()}} registros.
+  </p>
   <table class="table">
     <thead>
       <tr>
+        <th>
+          Alta
+        </th>
         <th>
           CZ
         </th>
@@ -51,18 +63,19 @@
           Nombre
         </th>
         <th>
-          Nivel
-        </th>
-        <th>
+          Nivel/<br>
           Oportunidad
         </th>
         <th>
           Calificación
         </th>
         <th>
-          Estado del certificado
+          Fecha de <br> conclusión
         </th>
         <th>
+          Estado del <br> certificado
+        </th>
+        <th width="100px">
           Acciones
         </th>
         <!-- <th>
@@ -74,56 +87,59 @@
       @foreach ($base as $registro)
         <tr>
           <td>
-            <b>{{$registro->cz}}</b> -- {{$registro->nombrecz}}
+            <span class="text-muted">{{date_format( date_create($registro->fFechaAlta), 'd/M/y')}}</span>
           </td>
           <td>
-            {{$registro->rfe}}
+            <b>{{$registro->iCveCZ}}</b> -- {{$registro->cNombreCZ}}
           </td>
           <td>
-            {{$registro->nombre}}
-            {{$registro->paterno}}
-            {{$registro->materno}}
+            {{$registro->cRFE}}
+          </td>
+          <td>
+            {{$registro->cNombre}}
+            {{$registro->cPaterno}}
+            {{$registro->cMaterno}}
           </td>
           <td>
             <h4>
             <span class=" label
-              @if($registro->nivel =='primaria')
+              @if(strpos(strtolower($registro->cNivel),'primaria')!== false)
               {{'label-info'}}
               @else
               {{'label-primary'}}
               @endif
               ">
-              {{$registro->nivel}}
+              {{$registro->cNivel}}
             </span>
           </h4>
 
-          </td>
-          <td>
-            <b class="
-              @if($registro->oportunidad =='Primera')
-              {{'text-success'}}
+              @if(strpos(strtolower($registro->cOportunidad),'primera')!== false)
+              <b class="text-success">Primera
               @else
-              {{'text-warning'}}
+              <b class="text-warning">{{$registro->cOportunidad}}
               @endif
-              ">
-              {{$registro->oportunidad}}
             </b>
           </td>
           <td>
-            @if($registro->calificacion)
+            @if($registro->dCalFinal)
               <h4>
-                @if($registro->calificacion >=6)
+                @if($registro->dCalFinal >=6)
                   <span class="label label-default">
                 @else
                   <pan  class="label label-warning">
                 @endif
-                {{$registro->calificacion}}
+                {{$registro->dCalFinal}}
                 </span>
               </h4>
             @endif
           </td>
           <td>
-            <h4 id="span_{{$registro->id}}">
+            {{date_format( date_create($registro->fConclusion), 'd/M/y')}}
+          </td>
+          @if($registro->idValidacion)
+          <td>
+            {{$registro->cEstatusCertificado}}
+            <h4 id="span_{{$registro->idValidacion}}">
               @if($registro->emisioncertificado==1)
               <span class="label label-success">Emitido</span>
               @elseif($registro->emisioncertificado==2)
@@ -133,8 +149,8 @@
               @endif
             </h4>
           </td>
-          <td>
-            {!! Form::open(array('route' => array('emision.update', $registro->id), 'method'=>'put')) !!}
+          <td id="$registro->idValidacion">
+            {!! Form::open(array('route' => array('emision.update', $registro->idValidacion), 'method'=>'put')) !!}
             @if($registro->emisioncertificado)
             <button type="submit" class="btn btn-danger" title="Cancelar el certificado" name="emision" value="2"> <i class="fa fa-times"></i></button>
             <button type="submit" class="btn btn-info" title="Reimprimir el certificado" name="emision" value="0"> <i class="fa fa-refresh"></i></button>
@@ -143,6 +159,26 @@
             @endif
             {!! Form::close() !!}
           </td>
+          @elseif($registro->cEstatusCertificado!='')
+          <td>
+            <h4>
+              @if(strtolower($registro->cEstatusCertificado)=='emitido')
+              <span class="label label-success">Emitido</span>
+              @elseif(strtolower($registro->cEstatusCertificado)=='cancelado')
+              <span class="label label-danger">Canelado</span>
+              @else
+              <span class="label label-warning">Pendiente</span>
+              @endif
+            </h3>
+          </td>
+          <td>
+            <span class="text-muted">Registro de Power BI</span>
+          </td>
+          @else
+          <td colspan="2">
+            <span class="text-muted">Registro por validar</span>
+          </td>
+          @endif
           <!-- <td>
             <input type="checkbox" id="{{$registro->id}}" value="1">
           </td> -->
@@ -150,6 +186,6 @@
       @endforeach
     </tbody>
   </table>
-  {!! $base->appends(['rfe' => old('rfe'),'nombrecz' => old('nombrecz'),'emitido' => old('emitido'),'calificacion' => old('nivel')])->render() !!}
+  {!! $base->appends(['rfe' => old('rfe'),'nombrecz' => old('nombrecz'),'emitido' => old('emitido'),'calificacion' => old('nivel'),'fecha' => old('fecha')])->render() !!}
 </div>
 @endsection

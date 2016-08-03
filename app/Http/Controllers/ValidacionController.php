@@ -98,6 +98,9 @@ class ValidacionController extends Controller
             $validacion->valido=$request->get('valido');
             $validacion->validadopor=  Auth::user()->username;
           }
+          if($request->has('todos')){
+            $validacion->validaTodo();
+          }
           if($request->has('observaciones')){
             $validacion->observaciones=$request->get('observaciones');
             $validacion->validadopor=  Auth::user()->username;

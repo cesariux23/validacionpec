@@ -45,6 +45,12 @@ class BaseValidacion extends Model
         return $query->where('iCveCZ', $cz);
       }
     }
+    public function scopeFecha($query,$fecha)
+    {
+      if(isset($fecha) && strlen($fecha)>0){
+        return $query->where('fConclusion', $fecha);
+      }
+    }
     public function scopeNivel($query,$nivel)
     {
       if(isset($nivel) && strlen($nivel)>0){
@@ -87,7 +93,8 @@ class BaseValidacion extends Model
         if($this->dCalFinal >= 6){
           $val->acredito=1;
         }
-        if(strtolower($validacion->nivel)=='primaria')
+
+        if(strpos(strtolower($val->nivel),'primaria')!== false)
           $val->certificado=1;
         //$val->valido=0;
         $val->rfe=$this->cRFE;
@@ -105,6 +112,35 @@ class BaseValidacion extends Model
       else{
         return false;
       }
+    }
+
+    public function scopeEmitido($query,$emitido)
+    {
+        if ($emitido!==null) {
+          switch ($emitido) {
+            case '0':
+              # code...
+              $query->where('valido', 1);
+              $query->Where('emisioncertificado',0);
+              # code...
+              break;
+              //emitidos
+              case '1':
+                $query->orWhere('emisioncertificado', $emitido);
+                $query->orWhere('cEstatusCertificado','like','emitido%');
+                break;
+              case '2':
+                $query->orwhere('emisioncertificado', $emitido);
+                $query->orWhere('cEstatusCertificado','like','cancelado%');
+                break;
+            default:
+              # solo los aprobados
+              $query->where('dCalFinal','>=',6);
+              break;
+          }
+            return $query;
+        }
+
     }
 
 }
