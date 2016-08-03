@@ -36,7 +36,7 @@
                         <select class="form-control" name="valido">
                           <option value="1">valido</option>
                           <option value="2">incompleto</option>
-                          <option value="2">Ya existe SASA</option>
+                          <option value="3">Ya existe SASA</option>
                         </select>
                       </div>
                       <div class="form-group">
