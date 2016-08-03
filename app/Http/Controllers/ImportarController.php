@@ -48,12 +48,18 @@ class ImportarController extends Controller
                     ->get();
                     if($r->count()==1){
                       $registro=$r->first();
-                      if($registro->cEstatusCertificado=="Emitido" || $registro->cEstatusCertificado=="Cancelado")
+                      if($registro->cEstatusCertificado=="Emitido" || $registro->cEstatusCertificado=="Cancelado"){
                         $resultado->mensaje.='certificado '.$registro->cEstatusCertificado.$error;
+                      }
+                      elseif($registro->dCalFinal<6){
+                        $resultado->mensaje.="El registro no cuenta con calificación aprobatoria ".$error;
+                      }
                       else{
                         $v=$registro->getValidacion();
                         if($v->emisioncertificado==null){
-                          $v->validatodo();
+                          if($request->get('valido')==1){
+                            $v->validatodo();
+                          }
                           $v->valido=$request->get('valido');
                           $resultado->mensaje.='OK! '.$ok;
                           if(isset($observaciones) && $observaciones!=null){
@@ -68,8 +74,11 @@ class ImportarController extends Controller
 
                       }
                     }
+                    elseif($r->count()==0){
+                      $resultado->mensaje.='No se encuentra en la base de Power BI '.$error;
+                    }
                     else{
-                      $resultado->mensaje.='Tiene mas de una oportunidad en el nivel '.$error;
+                      $resultado->mensaje.='Existen varios registros con ese RFE y Nivel '.$error;
                     }
                   }
 

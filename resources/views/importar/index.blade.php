@@ -15,10 +15,11 @@
                   </div>
                   @endif
                   <div class="alert alert-info">
-                    El archivo debe contener maximo 2 columnas:<br>
+                    El archivo debe contener maximo 3 columnas:<br>
                     <ul>
                       <li>RFE</li>
-                      <li>Observaciones</li>
+                      <li>Nivel</li>
+                      <li>Observaciones (opcional)</li>
                     </ul>
                   </div>
                       {!! Form::open(
