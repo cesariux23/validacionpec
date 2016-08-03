@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\BaseValidacion;
 use App\Validacion;
+use Auth;
 
 
 class ImportarController extends Controller
@@ -58,6 +59,7 @@ class ImportarController extends Controller
                           if(isset($observaciones) && $observaciones!=null){
                             $v->observaciones=$observaciones;
                           }
+                          $v->validadopor=  Auth::user()->username;
                           $v->save();
                         }else{
                           $resultado->mensaje.="Ya procesado para emisión ".$error;
