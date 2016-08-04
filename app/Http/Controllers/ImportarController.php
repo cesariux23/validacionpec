@@ -46,7 +46,7 @@ class ImportarController extends Controller
                     $r=BaseValidacion::where('cRFE',$rfe)
                     ->where('cNivel',$nivel)
                     ->get();
-                    if($r->count()==1){
+                    if($r->count()==1 || ($r->count()==2 && $r->get(0)->dCalFinal==$r->get(1)->dCalFinal)){
                       $registro=$r->first();
                       if($registro->cEstatusCertificado=="Emitido" || $registro->cEstatusCertificado=="Cancelado"){
                         $resultado->mensaje.='certificado '.$registro->cEstatusCertificado.$error;
@@ -56,7 +56,7 @@ class ImportarController extends Controller
                       }
                       else{
                         $v=$registro->getValidacion();
-                        if($v->emisioncertificado==null){
+                        if($v->emisioncertificado==null || $v->emisioncertificado=='0'){
                           if($request->get('valido')==1){
                             $v->validatodo();
                           }
@@ -68,7 +68,7 @@ class ImportarController extends Controller
                           $v->validadopor=  Auth::user()->username;
                           $v->save();
                         }else{
-                          $resultado->mensaje.="Ya procesado para emisión ".$error;
+                          $resultado->mensaje.="Registro ya procesado ".$error;
                         }
 
 
@@ -77,7 +77,7 @@ class ImportarController extends Controller
                     elseif($r->count()==0){
                       $resultado->mensaje.='No se encuentra en la base de Power BI '.$error;
                     }
-                    else{
+                    else {
                       $resultado->mensaje.='Existen varios registros con ese RFE y Nivel '.$error;
                     }
                   }

@@ -164,6 +164,8 @@
             <h4>
               @if(strtolower($registro->cEstatusCertificado)=='emitido')
               <span class="label label-success">Emitido</span>
+              <br>
+              <small>{{$registro->cFolioCertificado}}</small>
               @elseif(strtolower($registro->cEstatusCertificado)=='cancelado')
               <span class="label label-danger">Canelado</span>
               @else
