@@ -14,6 +14,15 @@
       @else
       <span class="label label-default"><i class="fa fa-clock-o"></i> Pendiente</span>
       @endif
+      @if($validacion->emisioncertificado=='1')
+      <br>
+      <br>
+      <span class="text-success">Emitido</span>
+      @elseif($validacion->emisioncertificado=='2')
+      <br>
+      <br>
+      <span class="text-danger">Cancelado</span>
+      @endif
     </div>
     {{$validacion->rfe}}
   </h2>
@@ -36,7 +45,7 @@
 
 {!! Form::open(array('route' => array('validacion.update', $validacion->id), 'method'=>'put')) !!}
 @if($validacion->valido)
-  @if(Auth::user()->rol==0)
+  @if(Auth::user()->rol==0 && $validacion->emisioncertificado==0)
     <div class="form-group">
       <button type="submit" name="valido" value="0" class="btn btn-info btn-lg"><i class="fa fa-external-link"></i> Validar de nuevo</button>
     </div>
