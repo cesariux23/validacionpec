@@ -72,9 +72,6 @@
           Nivel
         </th>
         <th>
-          Oportunidad
-        </th>
-        <th>
           Calificación
         </th>
         <!-- <th>
@@ -88,56 +85,7 @@
     <tbody>
       @foreach ($base as $registro)
         <tr>
-          <td>
-            <span class="text-muted">{{date_format( date_create($registro->fFechaAlta), 'd/M/y')}}</span>
-          </td>
-          <td>
-            <b>{{$registro->iCveCZ}}</b> -- {{$registro->cNombreCZ}}
-          </td>
-          <td>
-            {{$registro->cRFE}}
-          </td>
-          <td>
-            {{$registro->cNombre}}
-            {{$registro->cPaterno}}
-            {{$registro->cMaterno}}
-          </td>
-          <td>
-            <h4>
-            <span class=" label
-              @if(strpos(strtolower($registro->cNivel),'primaria')!== false)
-              {{'label-info'}}
-              @else
-              {{'label-primary'}}
-              @endif
-              ">
-              {{$registro->cNivel}}
-            </span>
-          </h4>
-
-          </td>
-          <td>
-            @if(strpos(strtolower($registro->cOportunidad),'primera')!== false)
-            <b class="text-success">Primera
-            @else
-            <b class="text-warning">{{$registro->cOportunidad}}
-            @endif
-          </b>
-            </b>
-          </td>
-          <td>
-            @if($registro->dCalFinal)
-              <h4>
-                @if($registro->dCalFinal >=6)
-                  <span class="label label-default">
-                @else
-                  <pan  class="label label-warning">
-                @endif
-                {{$registro->dCalFinal}}
-                </span>
-              </h4>
-            @endif
-          </td>
+          @include('partials.detalleregistro')
           <td id="{{$registro->cRFE}}">
             @if($registro->getEstado())
               @if($registro->valido>=1)
@@ -168,7 +116,7 @@
   function nuevaVentana() {
     event.preventDefault()
     e=event.currentTarget;
-    var myWindow = window.open(e.href,'Validación de registro', "width=200, height=100,width=750,height=850");
+    var myWindow = window.open(e.href,'Validación de registro', "width=200, height=100,width=750,height=780");
     $(e).parent().html("Trabajando ..");
   }
 

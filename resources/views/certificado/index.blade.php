@@ -5,7 +5,7 @@
   {!! Form::open(array('method' => 'get')) !!}
   <div>
     <div class="pull-right">
-      <a href="{{route('emision.export',['rfe' => old('rfe'),'nombrecz' => old('nombrecz'),'emitido' => old('emitido'),'calificacion' => old('nivel'),'fecha' => old('fecha')])}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i> Exportar</a>
+      <a href="{{route('emision.export',['rfe' => old('rfe'),'nombrecz' => old('nombrecz'),'emitido' => old('emitido'),'nivel' => old('nivel'),'fechaemision' => old('fechaemision'),'fechaconclusion' => old('fechaconclusion'),'rfe' => old('rfe'),'nombre' => old('nombre'),'paterno' => old('paterno'),'materno' => old('materno')])}}" class="btn btn-default" target="_blank"><i class="fa fa-download"></i> Exportar</a>
       <a href="{{url('/emision?emitido=0')}}" class="btn btn-danger"><i class="fa fa-times"></i> Limpiar</a>
       <button type="submit" class="btn btn-info"><i class="fa fa-filter"></i> Filtar</button>
     </div>
@@ -33,13 +33,36 @@
     <div class="form-group col-md-2">
       <div class="form-group">
         <label>Fecha de conclusión</label>
-        {!! Form::select('fecha', $fechas,null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
+        {!! Form::select('fechaconclusion', $fechas,null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
+      </div>
+    </div>
+    <div class="form-group col-md-2">
+      <div class="form-group">
+        <label>Fecha de emision</label>
+        {!! Form::text('fechaemision',null,array('class'=>'form-control'))!!}
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="form-group col-md-3">
+      <div class="form-group">
+        {!! Form::text('rfe',null,array('class'=>'form-control','placeholder'=>'RFE'))!!}
       </div>
     </div>
     <div class="form-group col-md-3">
       <div class="form-group">
-        <label>RFE</label>
-        {!! Form::text('rfe',null,array('class'=>'form-control'))!!}
+        {!! Form::text('nombre',null,array('class'=>'form-control','placeholder'=>'Nombre'))!!}
+      </div>
+    </div>
+    <div class="form-group col-md-3">
+      <div class="form-group">
+        {!! Form::text('paterno',null,array('class'=>'form-control','placeholder'=>'Paterno'))!!}
+      </div>
+    </div>
+    <div class="form-group col-md-3">
+      <div class="form-group">
+        {!! Form::text('materno',null,array('class'=>'form-control','placeholder'=>'Materno'))!!}
       </div>
     </div>
   </div>
@@ -63,8 +86,7 @@
           Nombre
         </th>
         <th>
-          Nivel/<br>
-          Oportunidad
+          Nivel
         </th>
         <th>
           Calificación
@@ -86,66 +108,58 @@
     <tbody>
       @foreach ($base as $registro)
         <tr>
-          <td>
-            <span class="text-muted">{{date_format( date_create($registro->fFechaAlta), 'd/M/y')}}</span>
-          </td>
-          <td>
-            <b>{{$registro->iCveCZ}}</b> -- {{$registro->cNombreCZ}}
-          </td>
-          <td>
-            {{$registro->cRFE}}
-          </td>
-          <td>
-            {{$registro->cNombre}}
-            {{$registro->cPaterno}}
-            {{$registro->cMaterno}}
-          </td>
-          <td>
-            <h4>
-            <span class=" label
-              @if(strpos(strtolower($registro->cNivel),'primaria')!== false)
-              {{'label-info'}}
-              @else
-              {{'label-primary'}}
-              @endif
-              ">
-              {{$registro->cNivel}}
-            </span>
-          </h4>
-
-              @if(strpos(strtolower($registro->cOportunidad),'primera')!== false)
-              <b class="text-success">Primera
-              @else
-              <b class="text-warning">{{$registro->cOportunidad}}
-              @endif
-            </b>
-          </td>
-          <td>
-            @if($registro->dCalFinal)
-              <h4>
-                @if($registro->dCalFinal >=6)
-                  <span class="label label-default">
-                @else
-                  <pan  class="label label-warning">
-                @endif
-                {{$registro->dCalFinal}}
-                </span>
-              </h4>
-            @endif
-          </td>
+          @include('partials.detalleregistro')
           <td>
             {{date_format( date_create($registro->fConclusion), 'd/M/y')}}
           </td>
-          @if($registro->idValidacion)
+          @if($registro->cEstatusCertificado!='')
           <td>
-            {{$registro->cEstatusCertificado}}
+            <h4>
+              @if(strtolower($registro->cEstatusCertificado)=='emitido')
+              <span class="label label-success">Emitido</span>
+              @elseif(strtolower($registro->cEstatusCertificado)=='entregado')
+              <span class="label label-default">Entregado</span>
+              @elseif(strtolower($registro->cEstatusCertificado)=='cancelado')
+              <span class="label label-danger">Canelado</span>
+              @else
+              <span class="label label-warning">Pendiente</span>
+              @endif
+              @if($registro->fEmisionCertificado)
+                <br>
+                <small>
+                  {{date_format( date_create($registro->fEmisionCertificado), 'd/M/y')}}
+                  @if($registro->cFolioCertificado)
+                  <br>
+                  <b>{{$registro->cFolioCertificado}}</b>
+                  @endif
+                </small>
+              @endif
+            </h3>
+          </td>
+          <td>
+            <span class="text-muted">Registro de Power BI</span>
+          </td>
+          @elseif($registro->idValidacion)
+          <td>
             <h4 id="span_{{$registro->idValidacion}}">
               @if($registro->emisioncertificado==1)
               <span class="label label-success">Emitido</span>
+                @if($registro->fechaemision)
+                <br>
+                <small>
+                  {{$registro->fechaemision->format('d/M/y')}}
+                  @if($registro->folio)
+                  <br>
+                  <b>{{$registro->folio}}</b>
+                  @endif
+                </small>
+              @endif
               @elseif($registro->emisioncertificado==2)
               <span class="label label-danger">Canelado</span>
               @else
               <span class="label label-warning">Pendiente</span>
+              <br>
+              <small class="text-muted">{{date_format( date_create(), 'd/M/y')}}</small>
               @endif
             </h4>
           </td>
@@ -159,26 +173,9 @@
             @endif
             {!! Form::close() !!}
           </td>
-          @elseif($registro->cEstatusCertificado!='')
-          <td>
-            <h4>
-              @if(strtolower($registro->cEstatusCertificado)=='emitido')
-              <span class="label label-success">Emitido</span>
-              <br>
-              <small>{{$registro->cFolioCertificado}}</small>
-              @elseif(strtolower($registro->cEstatusCertificado)=='cancelado')
-              <span class="label label-danger">Canelado</span>
-              @else
-              <span class="label label-warning">Pendiente</span>
-              @endif
-            </h3>
-          </td>
-          <td>
-            <span class="text-muted">Registro de Power BI</span>
-          </td>
           @else
           <td colspan="2">
-            <span class="text-muted">Registro por validar</span>
+            <span class="text-muted">Registro pendiente de validar</span>
           </td>
           @endif
           <!-- <td>
@@ -188,6 +185,6 @@
       @endforeach
     </tbody>
   </table>
-  {!! $base->appends(['rfe' => old('rfe'),'nombrecz' => old('nombrecz'),'emitido' => old('emitido'),'calificacion' => old('nivel'),'fecha' => old('fecha')])->render() !!}
+  {!! $base->appends(['rfe' => old('rfe'),'nombrecz' => old('nombrecz'),'emitido' => old('emitido'),'nivel' => old('nivel'),'fechaemision' => old('fechaemision'),'fechaconclusion' => old('fechaconclusion'),'rfe' => old('rfe'),'nombre' => old('nombre'),'paterno' => old('paterno'),'materno' => old('materno')])->render() !!}
 </div>
 @endsection

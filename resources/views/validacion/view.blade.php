@@ -28,23 +28,19 @@
       ">
       {{$validacion->nivel}}
     </span>
-  <hr>
+    @if($validacion->valido)
+    <br>
+    <span class="text-muted">Validado por</span> <b class="text-success">{{$validacion->validador->name}}</b></span>
+    @endif
+    <hr>
 
 {!! Form::open(array('route' => array('validacion.update', $validacion->id), 'method'=>'put')) !!}
 @if($validacion->valido)
-  <div>
-    <div class="alert alert-success">
-      <p>
-        Validadado por: <b>{{$validacion->validadopor}}</b>.
-      </p>
-    </div>
   @if(Auth::user()->rol==0)
     <div class="form-group">
       <button type="submit" name="valido" value="0" class="btn btn-info btn-lg"><i class="fa fa-external-link"></i> Validar de nuevo</button>
-
     </div>
   @endif
-  </div>
   <table class="table">
     <thead>
       <tr>
@@ -281,19 +277,15 @@
   </table>
   @endif
 
-  @if($validacion->valido != 1)
     <div class="form-group">
       <label>Observaciones</label>
       <div>
-        {!! Form::textarea('observaciones',$validacion->observaciones,['class'=>'form-control','rows'=>'3']) !!}
+        {!! Form::textarea('observaciones',$validacion->observaciones,['id'=>'observaciones', 'class'=>'form-control','rows'=>'2']) !!}
       </div>
     </div>
     <div class="form-group">
-    @endif
     @if($validacion->valido)
-    @if($validacion->valido>1)
     <button type="submit" class="btn btn-default"><i class="fa fa-refresh"></i> Actualizar observaciones</button>
-    @endif
     @else
     <button type="submit" id="valido" name="valido" value="1" class="btn btn-success" {{($validacion->datospersonales && $validacion->curp && $validacion->terceros && $validacion->autoevaluacion && $validacion->certificado && $validacion->foto && $validacion->aprendizaje) ? "":"disabled"}}><i class="fa fa-save"></i> Finalizar validación</button>
     <button type="submit" id="incompleto" name="valido" value="2" class="btn btn-danger" {{($validacion->datospersonales && $validacion->curp && $validacion->terceros && $validacion->autoevaluacion && $validacion->certificado && $validacion->foto && $validacion->aprendizaje) ? "disabled":""}}><i class="fa fa-warning"></i> Expediente incompleto</button>
@@ -318,7 +310,7 @@
       e.value=0;
     }
     data[e.name]=e.value;
-    console.log(e.value);
+    data['observaciones']=$('#observaciones').val();
 
     $(e).removeClass('btn-success');
     $(e).removeClass('btn-default');

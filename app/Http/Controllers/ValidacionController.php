@@ -90,21 +90,19 @@ class ValidacionController extends Controller
           $validacion->terceros=$request->get('terceros');
         if($request->has('aprendizaje'))
           $validacion->aprendizaje=$request->get('aprendizaje');
-          if($request->has('autoevaluacion'))
-            $validacion->autoevaluacion=$request->get('autoevaluacion');
+        if($request->has('autoevaluacion'))
+          $validacion->autoevaluacion=$request->get('autoevaluacion');
         if($request->has('foto'))
           $validacion->foto=$request->get('foto');
-          if($request->has('valido')){
-            $validacion->valido=$request->get('valido');
-            $validacion->validadopor=  Auth::user()->username;
-          }
-          if($request->has('todos')){
+        if($request->has('observaciones'))
+          $validacion->observaciones=$request->get('observaciones');
+        if($request->has('valido')){
+          $validacion->valido=$request->get('valido');
+          $validacion->validadopor=  Auth::user()->id;
+          $validacion->fechavalidacion=date("Y-m-d");
+        }
+        if($request->has('todos'))
             $validacion->validaTodo();
-          }
-          if($request->has('observaciones')){
-            $validacion->observaciones=$request->get('observaciones');
-            $validacion->validadopor=  Auth::user()->username;
-          }
         $validacion->save();
         if ($request->ajax())
         {

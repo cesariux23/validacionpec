@@ -40,5 +40,24 @@ Route::get('/emision/export',
 Route::resource('emision','EmisionController');
 Route::resource('validacion','ValidacionController');
 
-Route::get('/importar', 'ImportarController@index');
-Route::post('/importar', 'ImportarController@index');
+Route::get('/importar/base',
+  [
+    'as' => 'importar.base', 'uses' => 'ImportarController@base'
+  ]
+);
+Route::get('/importar/certificados',
+  [
+    'as' => 'importar.certificados', 'uses' => 'ImportarController@certificados'
+  ]
+);
+
+Route::post('/importar/base',
+  [
+    'as' => 'importar.base', 'uses' => 'ImportarController@base'
+  ]
+);
+Route::post('/importar/certificados',
+  [
+    'as' => 'importar.certificados', 'uses' => 'ImportarController@certificados'
+  ]
+);

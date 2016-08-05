@@ -10,6 +10,8 @@ class BaseValidacion extends Model
     //Modelo de la base de datos SIGA
     protected $table='baseValidacion';
 
+     protected $dates = ['created_at', 'updated_at', 'fechaemision'];
+
     public function scopeRfe($query,$rfe)
     {
       if(isset($rfe) && strlen($rfe)>0){
@@ -45,10 +47,17 @@ class BaseValidacion extends Model
         return $query->where('iCveCZ', $cz);
       }
     }
-    public function scopeFecha($query,$fecha)
+    public function scopeFechaconclusion($query,$fecha)
     {
       if(isset($fecha) && strlen($fecha)>0){
         return $query->where('fConclusion', $fecha);
+      }
+    }
+    public function scopeFechaemision($query,$fecha)
+    {
+      if(isset($fecha) && strlen($fecha)>0){
+        return $query->where('fEmisionCertificado', $fecha);
+        return $query->orWhere('fechaemision', $fecha);
       }
     }
     public function scopeNivel($query,$nivel)
@@ -133,6 +142,9 @@ class BaseValidacion extends Model
                 $query->orwhere('emisioncertificado', $emitido);
                 $query->orWhere('cEstatusCertificado','like','cancelado%');
                 break;
+                case '3':
+                  $query->orWhere('cEstatusCertificado','like','entregado%');
+                  break;
             default:
               # solo los aprobados
               $query->where('dCalFinal','>=',6);

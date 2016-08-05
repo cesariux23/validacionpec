@@ -35,7 +35,11 @@ class EmisionController extends Controller
             ->rfe($request->input('rfe'))
             ->cz($request->input('nombrecz'))
             ->nivel($request->input('nivel'))
-            ->fecha($request->input('fecha'))
+            ->fechaconclusion($request->input('fechaconclusion'))
+            ->fechaemision($request->input('fechaemision'))
+            ->paterno($request->input('paterno'))
+            ->materno($request->input('materno'))
+            ->nombre($request->input('nombre'))
             ->paginate(20);
             //->tosql();
             //dd($base);
@@ -102,6 +106,9 @@ class EmisionController extends Controller
         $val=Validacion::find($id);
           if($request->has('emision')){
             $val->emisioncertificado=$request->get('emision');
+            if($request->get('emision')=='1'){
+              $val->fechaemision=date('Y-m-d');
+            }
             $val->save();
           }
         return redirect()->back();
@@ -121,7 +128,7 @@ class EmisionController extends Controller
     public function export(Request $request)
     {
         $csv = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
-        $titulo='Registros_emision_';
+        $titulo='Certificados_';
         if($request->input('emitido')!==null){
           switch ($request->input('emitido')) {
             case '0':
@@ -134,7 +141,7 @@ class EmisionController extends Controller
               $titulo .='_cancelados';
               break;
             default:
-              $titulo .='_todos';
+              $titulo .='_todos_los_registros';
               break;
           }
         }
@@ -152,7 +159,11 @@ class EmisionController extends Controller
             ->rfe($request->input('rfe'))
             ->cz($request->input('nombrecz'))
             ->nivel($request->input('nivel'))
-            ->fecha($request->input('fecha'))
+            ->fechaconclusion($request->input('fechaconclusion'))
+            ->fechaemision($request->input('fechaemision'))
+            ->paterno($request->input('paterno'))
+            ->materno($request->input('materno'))
+            ->nombre($request->input('nombre'))
             ->get();
           $r->each(function($person) use($csv) {
             $csv->insertOne($person->toArray());

@@ -37,6 +37,12 @@ class Validacion extends Model
         return $query;
       }
     }
+
+    public function validador()
+    {
+      return $this->hasOne('App\User', 'id', 'validadopor');
+    }
+
     public function validaTodo()
     {
       $this->datospersonales=1;
