@@ -98,15 +98,23 @@ class ValidacionController extends Controller
           $validacion->observaciones=$request->get('observaciones');
         if($request->has('valido')){
           $validacion->valido=$request->get('valido');
-          $validacion->validadopor=  Auth::user()->id;
-          $validacion->fechavalidacion=date("Y-m-d");
+          if($request->get('valido')=='1'){
+            $validacion->verificado=0;
+            $validacion->validadopor=Auth::user()->id;
+            $validacion->fechavalidacion=date("Y-m-d");
+          }
+        }
+        if($request->has('verificado')){
+          $validacion->verificado=$request->get('verificado');
+          $validacion->verificadopor=  Auth::user()->id;
+          $validacion->fechaverificacion=date("Y-m-d");
         }
         if($request->has('todos'))
             $validacion->validaTodo();
         $validacion->save();
         if ($request->ajax())
         {
-          $valido=($validacion->datospersonales==1 && $validacion->curp==1 && $validacion->certificado==1 && $validacion->foto==1 && $validacion->curp==1 && $validacion->foto==1 && $validacion->autoevaluacion==1 && $validacion->terceros==1 && $validacion->aprendizaje==1)? true: false;
+          $valido=($validacion->datospersonales==1 && $validacion->curp==1 && $validacion->certificado==1 && $validacion->foto==1 && $validacion->curp==1 && $validacion->foto==1 && $validacion->autoevaluacion==1 && ($validacion->terceros==1 || $validacion->aprendizaje==1))? true: false;
           //Regresa la validación del Object
           return response()->json([
               'valido' => $valido

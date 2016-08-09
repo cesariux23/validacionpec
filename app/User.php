@@ -23,4 +23,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function czs()
+    {
+      return $this->hasMany('App\Asignacionescz', 'iduser', 'id');
+    }
 }

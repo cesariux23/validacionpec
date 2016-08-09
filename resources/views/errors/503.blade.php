@@ -44,7 +44,7 @@
         <div class="container">
             <div class="content">
                 <div class="title">No autorizado.</div>
-                <a href="{{url('/base')}}" class="volver"><b>Volver al listado.</b></a>
+                <a href="{{url('/')}}" class="volver"><b>Volver al listado.</b></a>
             </div>
         </div>
     </body>

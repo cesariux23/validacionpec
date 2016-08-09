@@ -4,8 +4,13 @@
     <h2>
     <div class="pull-right">
       @if($validacion->valido)
+      <br>
         @if($validacion->valido==1)
-        <span class="label label-success"><i class="fa fa-check"></i> Validado</span>
+          @if($validacion->verificado==1)
+          <span class="label label-success"><i class="fa fa-check"></i> Verificado</span>
+          @else
+          <span class="label label-info"><i class="fa fa-clock-o"></i> Pendiente de verificar</span>
+          @endif
         @elseif($validacion->valido==2)
         <span class="label label-danger"><i class="fa fa-warning"></i> Expediente incompleto</span>
         @else
@@ -37,17 +42,32 @@
       ">
       {{$validacion->nivel}}
     </span>
-    @if($validacion->valido)
-    <br>
-    <span class="text-muted">Validado por</span> <b class="text-success">{{$validacion->validador->name}}</b></span>
-    @endif
     <hr>
+    @if($validacion->valido)
+      @if($validacion->valido==1)
+        <span class="label label-success"><i class="fa fa-check"></i> Validado por {{$validacion->validador->name}}</span>
+        @if($validacion->verificado==1)
+          <span class="label label-default"><i class="fa fa-check-circle-o"></i> Verificado por {{$validacion->verificador->name}}</span>
+        @endif
+      @endif
+      <br><br>
+    @endif
 
 {!! Form::open(array('route' => array('validacion.update', $validacion->id), 'method'=>'put')) !!}
 @if($validacion->valido)
-  @if(Auth::user()->rol==0 && $validacion->emisioncertificado==0)
+  @if($validacion->emisioncertificado==0)
     <div class="form-group">
-      <button type="submit" name="valido" value="0" class="btn btn-info btn-lg"><i class="fa fa-external-link"></i> Validar de nuevo</button>
+      @if( $validacion->valido<3 && !$validacion->verificado)
+      <div class="pull-right">
+        <button type="submit" name="valido" value="0" class="btn btn-default btn-lg"><i class="fa fa-external-link"></i> Validar de nuevo</button>
+      </div>
+      @endif
+      @if(Auth::user()->rol<=1 && $validacion->valido==1 && $validacion->verificado==0)
+      <button type="submit" name="verificado" value="1" class="btn btn-info btn-lg"><i class="fa fa-check"></i> Verificar registro</button>
+      @endif
+      @if(Auth::user()->rol==0 && $validacion->verificado && !$validacion->emisioncertificado)
+      <button type="submit" name="verificado" value="0" class="btn btn-default btn-lg"><i class="fa fa-check"></i> Verificar de nuevo</button>
+      @endif
     </div>
   @endif
   <table class="table">

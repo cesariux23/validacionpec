@@ -42,6 +42,10 @@ class Validacion extends Model
     {
       return $this->hasOne('App\User', 'id', 'validadopor');
     }
+    public function verificador()
+    {
+      return $this->hasOne('App\User', 'id', 'verificadopor');
+    }
 
     public function validaTodo()
     {

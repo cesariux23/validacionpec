@@ -165,11 +165,15 @@
           </td>
           <td id="$registro->idValidacion">
             {!! Form::open(array('route' => array('emision.update', $registro->idValidacion), 'method'=>'put')) !!}
+            @if(Auth::user()->rol==3)
             @if($registro->emisioncertificado)
             <button type="submit" class="btn btn-danger" title="Cancelar el certificado" name="emision" value="2"> <i class="fa fa-times"></i></button>
             <button type="submit" class="btn btn-info" title="Reimprimir el certificado" name="emision" value="0"> <i class="fa fa-refresh"></i></button>
             @else
             <button type="submit" class="btn btn-success" title="marcar como emitido" name="emision" value="1"> <i class="fa fa-check"></i></button>
+            @endif
+            @else
+            <span class="text-muted">No permitido</span>
             @endif
             {!! Form::close() !!}
           </td>

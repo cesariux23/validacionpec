@@ -24,9 +24,9 @@ class EmisionController extends Controller
      */
     public function index(Request $request)
     {
-        if(Auth::user()->rol<2){
+        if(Auth::user()->rol==0 || Auth::user()->rol==3){
           $request->flash();
-          $coordinaciones= Coordinaciones::lists('cNombreCZ','iCveCZ');
+          $coordinaciones= Coordinaciones::lists('coordinacion','id');
           $fechas= Fechas::lists('fConclusion','fConclusion');
           $coordinaciones->prepend('--Todas las CZ --', '');
           //$fechas=array_shift($fechas);

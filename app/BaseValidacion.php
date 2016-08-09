@@ -66,6 +66,12 @@ class BaseValidacion extends Model
         return $query->where('cNivel', $nivel);
       }
     }
+    public function scopeVerificado($query,$verificado)
+    {
+      if(isset($verificado)){
+        return $query->where('verificado', $verificado);
+      }
+    }
     public function scopeValido($query,$valido)
     {
       if(isset($valido) && $valido){
@@ -129,7 +135,7 @@ class BaseValidacion extends Model
           switch ($emitido) {
             case '0':
               # code...
-              $query->where('valido', 1);
+              $query->where('verificado', 1);
               $query->Where('emisioncertificado',0);
               # code...
               break;

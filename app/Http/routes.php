@@ -10,18 +10,43 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::auth();
 
 Route::get('/', function () {
-    return redirect()->route('base.pendientes.index');
+  if(Auth::user()){
+    switch (Auth::user()->rol) {
+      case '0':
+        # code...
+      case '1':
+        # code...
+        return redirect()->route('base.validos.index');
+        break;
+      case '2':
+        # code...
+        return redirect()->route('base.pendientes.index');
+        break;
+        case '3':
+          # code...
+          return redirect()->route('emision.index',['emitido'=>0]);
+          break;
+      default:
+        # code...
+        return redirect('/login');
+        break;
+    }
+  }
+  else{
+    return redirect('login');
+  }
 });
 
-Route::auth();
 Route::group(['prefix' => 'base'], function ()
     {
         Route::resource('todos','BaseController', ['only' => ['index','show']]);
         Route::resource('pendientes','BaseController', ['only' => ['index','show']]);
         Route::resource('incompletos', 'BaseController', ['only' => ['index']]);
         Route::resource('validos', 'BaseController', ['only' => ['index']]);
+        Route::resource('finalizados', 'BaseController', ['only' => ['index']]);
         Route::resource('ensasa', 'BaseController', ['only' => ['index']]);
     }
 );

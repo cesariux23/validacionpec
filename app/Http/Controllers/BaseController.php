@@ -8,12 +8,13 @@ use App\Http\Requests;
 use App\BaseValidacion;
 use App\Coordinaciones;
 use App\Validacion;
+use Auth;
 
 class BaseController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth']);
     }
     /**
      * Display a listing of the resource.
@@ -23,6 +24,8 @@ class BaseController extends Controller
     public function index(Request $request)
     {
         //
+
+        $verificado=null;
         $titulo="Registro pendientes de validación";
         $ruta=$request->route()->getName();
         switch ($ruta) {
@@ -35,9 +38,15 @@ class BaseController extends Controller
             $valido=2;
             break;
           case 'base.validos.index':
-            $titulo="<span class='text-success'><i class='fa fa-check-circle-o'></i></span> Validación finalizada";
+            $titulo="<span class='text-info'><i class='fa fa-check'></i></span> Pendientes de verificación";
             $valido=1;
+            $verificado=0;
             break;
+            case 'base.finalizados.index':
+              $titulo="<span class='text-success'><i class='fa fa-check-circle-o'></i></span> Proceso finalizado";
+              $valido=1;
+              $verificado=1;
+              break;
           case 'base.ensasa.index':
             $titulo="<span class='text-warning'><i class='fa fa-copy'></i></span> Registros ya existentes en SASA";
             $valido=3;
@@ -49,17 +58,33 @@ class BaseController extends Controller
         }
 
         $request->flash();
-        $coordinaciones= Coordinaciones::lists('cNombreCZ','iCveCZ');
-        $coordinaciones->prepend('--Todas las CZ --', '');
+
+        $cz=null;
+        if($request->user()->czs->count()==0){
+          $coordinaciones= Coordinaciones::lists('coordinacion','id');
+          $coordinaciones->prepend('--Todas las CZ --', '');
+          $cz=$request->input('iCveCZ');
+        }
+        else{
+          $coordinaciones=Auth::user()->czs->lists('coordinacion','id');
+          if($request->has('iCveCZ')){
+            $cz=$request->input('iCveCZ');
+          }
+          else{
+            $cz=$request->user()->czs->first()->id;
+          }
+        }
+
         $base=BaseValidacion::where('cEstatusCertificado','')
           ->rfe($request->input('cRFE'))
           ->paterno($request->input('cPaterno'))
           ->materno($request->input('cMaterno'))
           ->nombre($request->input('cNombre'))
-          ->cz($request->input('iCveCZ'))
+          ->cz($cz)
           ->nivel($request->input('cNivel'))
           ->where('dCalFinal','>=',6)
           ->valido($valido)
+          ->verificado($verificado)
           ->paginate(20);
         return view('base/index')->with(array('base'=>$base, 'coordinaciones'=>$coordinaciones, 'titulo'=>$titulo, 'valido'=>$valido,'ruta'=>$ruta));
     }
@@ -158,11 +183,28 @@ class BaseController extends Controller
               break;
           }
         }
-          if($request->input('iCveCZ')!=null){
-            $titulo .='_CZ'.$request->input('iCveCZ');
-          }else{
-            $titulo .='_todasCZ';
+
+          $cz=null;
+          if($request->user()->czs->count()==0){
+            if($request->input('iCveCZ')!=null){
+              $titulo .='_CZ'.$request->input('iCveCZ');
+              $cz=$request->input('iCveCZ');
+            }else{
+              $titulo .='_todasCZ';
+            }
           }
+          else{
+            if($request->has('iCveCZ')){
+              $cz=$request->input('iCveCZ');
+            }
+            else{
+              $cz=$request->user()->czs->first()->id;
+            }
+            $titulo .='_CZ'.$cz;
+          }
+
+
+
           //fecha
           $titulo.=date('_dmyHis').'.csv';
         $csv->insertOne(\Schema::getColumnListing('baseValidacion'));
@@ -171,7 +213,7 @@ class BaseController extends Controller
             ->paterno($request->input('cPaterno'))
             ->materno($request->input('cMaterno'))
             ->nombre($request->input('cNombre'))
-            ->cz($request->input('iCveCZ'))
+            ->cz($cz)
             ->nivel($request->input('cNivel'))
             ->where('dCalFinal','>=',6)
             ->valido($request->input('valido'))
