@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Validacion;
+use App\BaseValidacion;
 use Auth;
 
 class ValidacionController extends Controller
@@ -64,8 +65,11 @@ class ValidacionController extends Controller
      */
     public function edit($id)
     {
+      //$validacion=BaseValidacion::find($id);
       $validacion=Validacion::find($id);
-      return view('validacion/view')->with(['validacion'=>$validacion]);
+      $base=BaseValidacion::select('cCURP','cArchivoFoto')->where('idvalidacion',$id)->first();
+
+      return view('validacion/view')->with(['validacion'=>$validacion, 'base'=>$base]);
     }
 
     /**
