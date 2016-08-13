@@ -6,10 +6,10 @@
       <div class="col-xs-2">
         <br><br>
         @if($base->cArchivoFoto)
-        <img src="http://siga.inea.gob.mx/Figuras/Fotografias/{{$base->cArchivoFoto}}" width="100px" style="border:solid 1px;" title="El archivo es recuperado a partir de la base de PowerBi" />
+        <img src="http://siga.inea.gob.mx/Figuras/Fotografias/{{$base->cArchivoFoto}}" width="100px" style="border:solid 1px;" title="El archivo fotográfico es recuperado a partir de la base de PowerBi" />
         @else
         <p class="text-warning text-center">
-          el archivo no esta registrado en PB
+          Fotografía
         </p>
         @endif
 

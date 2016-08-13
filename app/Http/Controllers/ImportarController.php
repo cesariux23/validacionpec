@@ -55,7 +55,11 @@ class ImportarController extends Controller
                         $v=$registro->getValidacion();
                         if($v->emisioncertificado==null || $v->emisioncertificado=='0'){
                           if($request->get('valido')==1){
-                            $v->validatodo();
+                            $v->fechaverificacion=date('Y-m-d');
+                            //verificación
+                            $v->verificado=1;
+                            $v->verificadopor=Auth::user()->id;
+                            $v->fechaverificacion=date('Y-m-d');
                           }
                           $v->valido=$request->get('valido');
                           $resultado->mensaje.='OK! '.$ok;
@@ -68,7 +72,7 @@ class ImportarController extends Controller
                           else {
                             $v->validadopor=Auth::user()->id;
                           }
-
+                          $v->fechavalidacion=date('Y-m-d');
                           $v->save();
                         }else{
                           $resultado->mensaje.="Registro ya procesado ".$error;

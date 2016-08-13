@@ -27,10 +27,9 @@ class EmisionController extends Controller
         if(Auth::user()->rol==0 || Auth::user()->rol==3){
           $request->flash();
           $coordinaciones= Coordinaciones::lists('coordinacion','id');
-          $fechas= Fechas::lists('fConclusion','fConclusion');
           $coordinaciones->prepend('--Todas las CZ --', '');
           //$fechas=array_shift($fechas);
-          $fechas->prepend('--Todas --', '');
+
           $base=BaseValidacion::emitido($request->input('emitido'))
             ->rfe($request->input('rfe'))
             ->cz($request->input('nombrecz'))
@@ -41,6 +40,11 @@ class EmisionController extends Controller
             ->materno($request->input('materno'))
             ->nombre($request->input('nombre'))
             ->paginate(20);
+            $fechas= BaseValidacion::emitido($request->input('emitido'))
+              ->cz($request->input('nombrecz'))
+              ->nivel($request->input('nivel'))
+              ->distinct('fConclusion')->select('fConclusion')->lists('fConclusion','fConclusion');
+            $fechas->prepend('--Todas --', '');
             //->tosql();
             //dd($base);
           return view('certificado/index')->with(array('base'=>$base, 'coordinaciones'=>$coordinaciones,'fechas'=>$fechas));

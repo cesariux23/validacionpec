@@ -11,7 +11,11 @@
       <p class="text-center">
         <b>Instituto Veracruzano de Educación para los Adultos</b>
         <br>
-        Sistema de validación de registros del SIGA, desarrollado en el Depto. de TI. por César Encarnación Mendoza, <b>2016</b>
+        Sistema de validación de registros del SIGA
+        <br>
+        Desarrollado en el Depto. de Tecnologías de la Información, <b>2016</b>.
+        <br>
+         Responsable: L.I. César Encarnación Mendoza, <b>cencarnacion@inea.gob.mx</b>, Ext. 3008
       </p>
     </footer>
   </body>

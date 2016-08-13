@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container">
   {!! Form::open(array('method' => 'get')) !!}
@@ -15,31 +14,31 @@
     <div class="form-group col-md-3">
       <div class="form-group">
         <label>CZ</label>
-        {!! Form::select('nombrecz', $coordinaciones,null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
+        {!! Form::select('nombrecz', $coordinaciones,null,array('class'=>'form-control','onchange'=>"return post(event)")) !!}
       </div>
     </div>
     <div class="form-group col-md-2">
       <div class="form-group">
         <label>Nivel</label>
-        {!! Form::select('nivel', array(''=>'-- Todos --', 'primaria' => 'primaria', 'secundaria' => 'secundaria'),null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
+        {!! Form::select('nivel', array(''=>'-- Todos --', 'primaria' => 'primaria', 'secundaria' => 'secundaria'),null,array('class'=>'form-control','onchange'=>"return post(event)")) !!}
       </div>
     </div>
     <div class="form-group col-md-2">
       <div class="form-group">
         <label>estado del certificado</label>
-        {!! Form::select('emitido', array('t'=>'-- Todos --', '0' => 'Pendiente', '1' => 'Emitido','2' => 'Cancelado'),null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
+        {!! Form::select('emitido', array('t'=>'-- Todos --', '0' => 'Pendiente', '1' => 'Emitido','2' => 'Cancelado'),null,array('class'=>'form-control','onchange'=>"return post(event)")) !!}
       </div>
     </div>
     <div class="form-group col-md-2">
       <div class="form-group">
         <label>Fecha de conclusión</label>
-        {!! Form::select('fechaconclusion', $fechas,null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
+        {!! Form::select('fechaconclusion', $fechas,null,array('class'=>'form-control','onchange'=>"return post(event)",'id'=>'fechaconclusion')) !!}
       </div>
     </div>
     <div class="form-group col-md-2">
       <div class="form-group">
         <label>Fecha de emision</label>
-        {!! Form::text('fechaemision',null,array('class'=>'form-control'))!!}
+        {!! Form::text('fechaemision',null,array('class'=>'form-control','id'=>'fechaemision'))!!}
       </div>
     </div>
 
@@ -191,4 +190,17 @@
   </table>
   {!! $base->appends(['rfe' => old('rfe'),'nombrecz' => old('nombrecz'),'emitido' => old('emitido'),'nivel' => old('nivel'),'fechaemision' => old('fechaemision'),'fechaconclusion' => old('fechaconclusion'),'rfe' => old('rfe'),'nombre' => old('nombre'),'paterno' => old('paterno'),'materno' => old('materno')])->render() !!}
 </div>
+@endsection
+@section('scripts')
+  <script type="text/javascript">
+  function post(event) {
+    console.log('hola!!');
+    var obj=event.currentTarget;
+    if(obj.name=='nombrecz' || obj.name=='emitido'){
+      $('#fechaconclusion').val('');
+      $('#fechaemision').val('');
+    }
+    obj.form.submit();
+  }
+  </script>
 @endsection
