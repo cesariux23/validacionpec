@@ -23,7 +23,7 @@ Route::get('/', function () {
         break;
       case '2':
         # code...
-        return redirect()->route('base.pendientes.index');
+        return redirect()->route('base.incompletos.index');
         break;
         case '3':
           # code...
@@ -84,5 +84,17 @@ Route::post('/importar/base',
 Route::post('/importar/certificados',
   [
     'as' => 'importar.certificados', 'uses' => 'ImportarController@certificados'
+  ]
+);
+
+
+Route::get('/user/password',
+  [
+    'as' => 'user.password', 'uses' => 'UserController@cambiarPassword'
+  ]
+);
+Route::post('/user/password',
+  [
+    'as' => 'user.password', 'uses' => 'UserController@cambiarPassword'
   ]
 );

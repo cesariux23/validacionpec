@@ -58,24 +58,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th>
-          Alta
-        </th>
-        <th>
-          CZ
-        </th>
-        <th>
-          RFE
-        </th>
-        <th>
-          Nombre
-        </th>
-        <th>
-          Nivel
-        </th>
-        <th>
-          Calificación
-        </th>
+        @include('partials.encabezadoregistro')
         <!-- <th>
           Estado del registro
         </th> -->

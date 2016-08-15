@@ -110,6 +110,9 @@ class ValidacionController extends Controller
         }
         if($request->has('verificado')){
           $validacion->verificado=$request->get('verificado');
+          if($request->get('verificado')==0 && $validacion->valido==3){
+            $validacion->valido=1;
+          }
           $validacion->verificadopor=  Auth::user()->id;
           $validacion->fechaverificacion=date("Y-m-d");
         }

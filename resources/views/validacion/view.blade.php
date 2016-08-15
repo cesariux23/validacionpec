@@ -9,7 +9,7 @@
         <img src="http://siga.inea.gob.mx/Figuras/Fotografias/{{$base->cArchivoFoto}}" width="100px" style="border:solid 1px;" title="El archivo fotográfico es recuperado a partir de la base de PowerBi" />
         @else
         <p class="text-warning text-center">
-          Fotografía
+          Sin Fotografía
         </p>
         @endif
 
@@ -326,8 +326,9 @@
 
           @if(Auth::user()->rol<=1 && $validacion->valido==1 && $validacion->verificado==0)
           <button type="submit" name="verificado" value="1" class="btn btn-info"><i class="fa fa-check"></i> Finalizar proceso</button>
+          <button type="submit" name="valido" value="3" class="btn btn-warning"><i class="fa fa-copy"></i> Ya existente en SASA</button>
           @endif
-          @if(Auth::user()->rol==0 && $validacion->verificado && !$validacion->emisioncertificado)
+          @if(Auth::user()->rol==0 && ($validacion->verificado || ($validacion->valido==3)) && !$validacion->emisioncertificado)
           <button type="submit" name="verificado" value="0" class="btn btn-default btn"><i class="fa fa-external-link text-primary"></i> Verificar nuevamente</button>
           @endif
           @if( $validacion->valido<3 && !$validacion->verificado)
@@ -338,7 +339,6 @@
     @else
     <button type="submit" id="valido" name="valido" value="1" class="btn btn-success" {{($validacion->datospersonales && $validacion->curp && ( $validacion->aprendizaje || $validacion->terceros) && $validacion->autoevaluacion && $validacion->certificado && $validacion->foto) ? "":"disabled"}}><i class="fa fa-save"></i> Validar registro</button>
     <button type="submit" id="incompleto" name="valido" value="2" class="btn btn-danger" {{($validacion->datospersonales && $validacion->curp && ($validacion->aprendizaje || $validacion->terceros) && $validacion->certificado && $validacion->foto) ? "disabled":""}}><i class="fa fa-warning"></i> Expediente incompleto</button>
-    <button type="submit" name="valido" value="3" class="btn btn-warning" {{ $validacion->valido ? "disabled" :""}}><i class="fa fa-copy"></i> Ya existente en SASA</button>
     @endif
   </div>
 {!! Form::close() !!}

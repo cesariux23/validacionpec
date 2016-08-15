@@ -2,7 +2,9 @@
   <span class="text-muted">{{date_format( date_create($registro->fFechaAlta), 'd/M/y')}}</span>
 </td>
 <td>
-  <b>{{$registro->iCveCZ}}</b> -- {{$registro->cNombreCZ}}
+  <b>{{$registro->iCveCZ}}</b>
+  <br>
+  {{$registro->cNombreCZ}}
 </td>
 <td>
   {{$registro->cRFE}}
@@ -11,6 +13,11 @@
   {{$registro->cNombre}}
   {{$registro->cPaterno}}
   {{$registro->cMaterno}}
+</td>
+<td>
+  <b>{{$registro->cNombreMunDom}}</b>
+  <br>
+    <span class="text-muted">{{$registro->cNombreLocDom}}</span>
 </td>
 <td>
   <h4>

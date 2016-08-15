@@ -10,6 +10,7 @@ use App\Validacion;
 use App\BaseValidacion;
 use App\Fechas;
 use Auth;
+use DB;
 
 class EmisionController extends Controller
 {
@@ -43,7 +44,9 @@ class EmisionController extends Controller
             $fechas= BaseValidacion::emitido($request->input('emitido'))
               ->cz($request->input('nombrecz'))
               ->nivel($request->input('nivel'))
-              ->distinct('fConclusion')->select('fConclusion')->lists('fConclusion','fConclusion');
+              ->distinct('fConclusion')->select('fConclusion')
+              ->orderBy('fConclusion', 'desc')
+              ->lists('fConclusion','fConclusion');
             $fechas->prepend('--Todas --', '');
             //->tosql();
             //dd($base);
