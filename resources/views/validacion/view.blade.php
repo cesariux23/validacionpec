@@ -2,19 +2,7 @@
 @section('content')
 <div class="container-fluid">
 {!! Form::open(array('route' => array('validacion.update', $validacion->id), 'method'=>'put')) !!}
-    <div class="row">
-      <div class="col-xs-2">
-        <br><br>
-        @if($base->cArchivoFoto)
-        <img src="http://siga.inea.gob.mx/Figuras/Fotografias/{{$base->cArchivoFoto}}" width="100px" style="border:solid 1px;" title="El archivo fotográfico es recuperado a partir de la base de PowerBi" />
-        @else
-        <p class="text-warning text-center">
-          Sin Fotografía
-        </p>
-        @endif
-
-      </div>
-      <div class="col-xs-10">
+    <div>
         <h2>
         <div class="pull-right">
           @if($validacion->valido)
@@ -66,7 +54,6 @@
             @endif
           @endif
         @endif
-      </div>
     </div>
     <hr>
 @if($validacion->valido)
