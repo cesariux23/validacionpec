@@ -161,7 +161,12 @@
           </td>
           @else
           <td colspan="2">
+            @if($registro->bTerminoProceso=='VERDADERO')
+            <h4><span class="label label-default">Proceso terminado en Power BI</span></h4>
+
+            @else
             <span class="text-muted">Registro pendiente de validar</span>
+            @endif
           </td>
           @endif
           <!-- <td>

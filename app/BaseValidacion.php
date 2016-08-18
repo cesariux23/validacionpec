@@ -77,6 +77,7 @@ class BaseValidacion extends Model
       if(isset($valido) && $valido){
         return $query->where('valido', $valido);
       }else {
+        //$query->where('bTerminoProceso', 'FALSO');
         $query->whereNull('valido');
         $query->orWhere('valido', 0);
 
@@ -137,6 +138,10 @@ class BaseValidacion extends Model
               # code...
               $query->where('verificado', 1);
               $query->Where('emisioncertificado',0);
+              $query->orWhere(function($q)
+                      {
+                          $q->where('dCalFinal','>=',6)->where('cEstatusCertificado','')->where('bTerminoProceso','VERDADERO');
+                      });
               # code...
               break;
               //emitidos
