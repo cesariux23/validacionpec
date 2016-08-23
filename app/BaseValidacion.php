@@ -137,7 +137,9 @@ class BaseValidacion extends Model
             case '0':
               # code...
               $query->where('verificado', 1);
+              $query->where('cEstatusCertificado','');
               $query->Where('emisioncertificado',0);
+
               $query->orWhere(function($q)
                       {
                           $q->where('dCalFinal','>=',6)->where('cEstatusCertificado','')->where('bTerminoProceso','VERDADERO');

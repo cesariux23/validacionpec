@@ -13,7 +13,7 @@
         <br>
         Sistema de validación de registros del SIGA
         <br>
-        Desarrollado en el Depto. de Tecnologías de la Información, <b>2016</b>.
+        <i>Desarrollado en el Depto. de Tecnologías de la Información</i>, <b>2016</b>.
       </p>
     </footer>
   </body>
