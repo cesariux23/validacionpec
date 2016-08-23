@@ -78,7 +78,6 @@ class BaseController extends Controller
         //determina si existe la cookie, para que se filtre con ese valor
         if(isset($_COOKIE['cz'])){
           $cz=$_COOKIE['cz'];
-          var_dump($cz);
           $request->iCveCZ=$cz;
         }
 
