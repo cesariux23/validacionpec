@@ -12,7 +12,7 @@
     </div>
     <h1>{!! $titulo !!}
     @if($cz)
-    <small class="text-info">CZ <b>{{$cz}}</b></small>
+    <small class="text-default">CZ <b>{{$cz}}</b></small>
     @endif
     </h1>
   </div>
