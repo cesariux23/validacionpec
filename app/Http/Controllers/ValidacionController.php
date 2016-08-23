@@ -104,6 +104,8 @@ class ValidacionController extends Controller
           $validacion->valido=$request->get('valido');
           if($request->get('valido')=='1'){
             $validacion->verificado=0;
+          }
+          if($request->get('valido')>='1'){
             $validacion->validadopor=Auth::user()->id;
             $validacion->fechavalidacion=date("Y-m-d");
           }

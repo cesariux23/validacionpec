@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
 <div class="container">
   {!! Form::open(array('method' => 'get')) !!}
   <div>
@@ -9,14 +10,18 @@
       <a href="{{route($ruta)}}" class="btn btn-danger"><i class="fa fa-times"></i> Limpiar</a>
       <button type="submit" class="btn btn-info"><i class="fa fa-filter"></i> Filtar</button>
     </div>
-    <h1>{!! $titulo !!}</h1>
+    <h1>{!! $titulo !!}
+    @if($cz)
+    <small class="text-info">CZ <b>{{$cz}}</b></small>
+    @endif
+    </h1>
   </div>
   <div class="row">
     @if(Auth::user()->czs->count()!='1')
     <div class="form-group col-md-2">
       <div class="form-group">
         <label>CZ</label>
-        {!! Form::select('iCveCZ', $coordinaciones,null,array('class'=>'form-control','onchange'=>"this.form.submit()")) !!}
+        {!! Form::select('iCveCZ', $coordinaciones,$cz,array('class'=>'form-control','onchange'=>"cambiaCZ(event)")) !!}
       </div>
     </div>
     @endif
@@ -52,9 +57,11 @@
     </div>
   </div>
   {!! Form::close() !!}
-  <p>
-    Resultados: {{$base->total()}} registros.
-  </p>
+
+
+    <p>
+      Resultados: <b>{{$base->total()}}</b> registros.
+    </p>
   <table class="table">
     <thead>
       <tr>
@@ -110,13 +117,23 @@
 @endsection
 @section('scripts')
 <script type="text/javascript">
+(function() {
+   //obtiene el cookie
+
+})();
+
+function cambiaCZ(event) {
+  e=event.currentTarget;
+  document.cookie="cz="+e.value;
+  e.form.submit();
+}
 
 $('.ventanavalidar').on('click',function(event){
     event.preventDefault(event);
     e=event.currentTarget;
     //var myWindow = window.open(e.href,'Validación de registro', "width=200, height=100,width=750,height=780");
     var myWindow = window.open(e.href,'Validación de registro', "width=750,height=600");
-
+    //location.reload();
     $(e).parent().html("Trabajando ..");
     //return false;
   });

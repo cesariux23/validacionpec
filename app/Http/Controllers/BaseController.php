@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 use App\Http\Requests;
 use App\BaseValidacion;
@@ -74,6 +75,11 @@ class BaseController extends Controller
             $cz=$request->user()->czs->first()->id;
           }
         }
+        //determina si existe la cookie, para que se filtre con ese valor
+        if($_COOKIE['cz']){
+          $cz=$_COOKIE['cz'];
+          $request->iCveCZ=$cz;
+        }
 
         $base=BaseValidacion::where('cEstatusCertificado','')
           ->rfe($request->input('cRFE'))
@@ -86,7 +92,10 @@ class BaseController extends Controller
           ->valido($valido)
           ->verificado($verificado)
           ->paginate(20);
-        return view('base/index')->with(array('base'=>$base, 'coordinaciones'=>$coordinaciones, 'titulo'=>$titulo, 'valido'=>$valido,'ruta'=>$ruta));
+
+
+          return view('base/index')->with(array('base'=>$base, 'coordinaciones'=>$coordinaciones, 'titulo'=>$titulo, 'valido'=>$valido,'ruta'=>$ruta, 'cz'=>$cz));
+
     }
 
     /**
