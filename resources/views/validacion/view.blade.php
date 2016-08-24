@@ -47,9 +47,9 @@
         </span>
         @if($validacion->valido)
         <br><br>
-          @if($validacion->valido==1)
+          @if($validacion->valido>=1 && $validacion->validadopor!=null)
             <span class="label label-success"><i class="fa fa-check"></i> Validado por {{$validacion->validador->name}}</span>
-            @if($validacion->verificado==1)
+            @if($validacion->verificado==1 && $validacion->verificadopor!=null)
               <span class="label label-default"><i class="fa fa-check-circle-o"></i> Finazizado por {{$validacion->verificador->name}}</span>
             @endif
           @endif
@@ -312,20 +312,20 @@
       @if($validacion->emisioncertificado==0)
 
           @if(Auth::user()->rol<=1 && $validacion->valido==1 && $validacion->verificado==0)
-          <button type="submit" name="verificado" value="1" class="btn btn-info"><i class="fa fa-check"></i> Finalizar proceso</button>
-          <button type="submit" name="valido" value="3" class="btn btn-warning"><i class="fa fa-copy"></i> Ya existente en SASA</button>
+          <button type="submit" name="verificado" value="1" class="btn btn-info sub"><i class="fa fa-paper-plane"></i> Finalizar proceso</button>
+          <button type="submit" name="valido" value="3" class="btn btn-warning sub"><i class="fa fa-copy"></i> Ya existente en SASA</button>
           @endif
-          @if(Auth::user()->rol==0 && ($validacion->verificado || ($validacion->valido==3)) && !$validacion->emisioncertificado)
-          <button type="submit" name="verificado" value="0" class="btn btn-default btn"><i class="fa fa-external-link text-primary"></i> Verificar nuevamente</button>
+          @if(Auth::user()->rol<2 && ($validacion->verificado || ($validacion->valido==3)) && !$validacion->emisioncertificado)
+          <button type="submit" name="verificado" value="0" class="btn btn-primary"><i class="fa fa-external-link"></i> Verificar nuevamente</button>
           @endif
           @if( $validacion->valido<3 && !$validacion->verificado)
-            <button type="submit" name="valido" value="0" class="btn btn-default"><i class="fa fa-external-link text-warning"></i> Validar nuevamente</button>
+            <button type="submit" name="valido" value="0" class="btn btn-primary"><i class="fa fa-external-link"></i> Revalidar</button>
           @endif
       @endif
     <button type="submit" class="btn btn-default"><i class="fa fa-refresh"></i> Actualizar observaciones</button>
     @else
-    <button type="submit" id="valido" name="valido" value="1" class="btn btn-success" {{($validacion->datospersonales && $validacion->curp && ( $validacion->aprendizaje || $validacion->terceros) && $validacion->autoevaluacion && $validacion->certificado && $validacion->foto) ? "":"disabled"}}><i class="fa fa-save"></i> Validar registro</button>
-    <button type="submit" id="incompleto" name="valido" value="2" class="btn btn-danger" {{($validacion->datospersonales && $validacion->curp && ($validacion->aprendizaje || $validacion->terceros) && $validacion->certificado && $validacion->foto) ? "disabled":""}}><i class="fa fa-warning"></i> Expediente incompleto</button>
+    <button type="submit" id="valido" name="valido" value="1" class="btn btn-success sub" {{($validacion->datospersonales && $validacion->curp && ( $validacion->aprendizaje || $validacion->terceros) && $validacion->autoevaluacion && $validacion->certificado && $validacion->foto) ? "":"disabled"}}><i class="fa fa-save"></i> Validar registro</button>
+    <button type="submit" id="incompleto" name="valido" value="2" class="btn btn-danger sub" {{($validacion->datospersonales && $validacion->curp && ($validacion->aprendizaje || $validacion->terceros) && $validacion->certificado && $validacion->foto) ? "disabled":""}}><i class="fa fa-warning"></i> Expediente incompleto</button>
     @endif
   </div>
 {!! Form::close() !!}
@@ -334,6 +334,9 @@
 
 @section('scripts')
 <script type="text/javascript">
+  var rfe='{{$validacion->rfe}}';
+  var estado='{{$validacion->valido}}';
+  var finalizado='{{$validacion->verificado}}';
   var url="{{route('validacion.update', $validacion->id)}}";
   function postValidacion(event) {
     e=event.currentTarget;
@@ -380,5 +383,29 @@
       b.click();
     });
   }
+
+  (function() {
+    mensaje="Validando..";
+    switch (estado) {
+      case '0':
+        mensaje="<i class='fa fa-clock-o'></i> Pendiente";
+        break;
+      case '1':
+        mensaje="<i class='fa fa-check'></i> Validado";
+        break;
+      case '2':
+        mensaje="<i class='fa fa-warning'></i> Incompleto";
+        break;
+      case '3':
+        mensaje="<i class='fa fa-copy'></i> Ya en SASA";
+        break;
+      default:
+
+    }
+    if(finalizado=='1'){
+      mensaje="<i class='fa fa-paper-plane'></i> Finalizado";
+    }
+   console.log(window.opener.document.getElementById(rfe).innerHTML=mensaje);
+  })();
 </script>
 @endsection

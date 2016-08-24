@@ -10,6 +10,7 @@ use App\BaseValidacion;
 use App\Coordinaciones;
 use App\Validacion;
 use Auth;
+use DB;
 
 class BaseController extends Controller
 {
@@ -25,7 +26,7 @@ class BaseController extends Controller
     public function index(Request $request)
     {
         //
-
+        DB::enableQueryLog();
         $verificado=null;
         $titulo="Registro pendientes de validación";
         $ruta=$request->route()->getName();
@@ -44,7 +45,7 @@ class BaseController extends Controller
             $verificado=0;
             break;
             case 'base.finalizados.index':
-              $titulo="<span class='text-success'><i class='fa fa-check-circle-o'></i></span> Proceso finalizado";
+              $titulo="<span class='text-success'><i class='fa fa-paper-plane'></i></span> Proceso finalizado";
               $valido=1;
               $verificado=1;
               break;
@@ -65,6 +66,11 @@ class BaseController extends Controller
           $coordinaciones= Coordinaciones::lists('coordinacion','id');
           $coordinaciones->prepend('--Todas las CZ --', '');
           $cz=$request->input('iCveCZ');
+          //determina si existe la cookie, para que se filtre con ese valor
+          if(isset($_COOKIE['cz'])){
+            $cz=$_COOKIE['cz'];
+            $request->iCveCZ=$cz;
+          }
         }
         else{
           $coordinaciones=Auth::user()->czs->lists('coordinacion','id');
@@ -74,11 +80,12 @@ class BaseController extends Controller
           else{
             $cz=$request->user()->czs->first()->id;
           }
-        }
-        //determina si existe la cookie, para que se filtre con ese valor
-        if(isset($_COOKIE['cz'])){
-          $cz=$_COOKIE['cz'];
-          $request->iCveCZ=$cz;
+
+          //determina si existe la cookie, para que se filtre con ese valor
+          if(isset($_COOKIE['cz']) && $request->user()->czs->count()>1){
+            $cz=$_COOKIE['cz'];
+            $request->iCveCZ=$cz;
+          }
         }
 
         $base=BaseValidacion::where('cEstatusCertificado','')
@@ -93,7 +100,8 @@ class BaseController extends Controller
           ->verificado($verificado)
           ->paginate(20);
 
-
+          // Store or dump the log data...
+          //dd(DB::getQueryLog());
           return view('base/index')->with(array('base'=>$base, 'coordinaciones'=>$coordinaciones, 'titulo'=>$titulo, 'valido'=>$valido,'ruta'=>$ruta, 'cz'=>$cz));
 
     }

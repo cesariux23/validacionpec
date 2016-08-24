@@ -69,13 +69,65 @@ class BaseValidacion extends Model
     public function scopeVerificado($query,$verificado)
     {
       if(isset($verificado)){
-        return $query->where('verificado', $verificado);
+        if($verificado=='0'){
+          return $query->orWhere(function($q){
+            $q->where('verificado', 0);
+            $q->orWhereNull('verificado');
+          });
+        }
+        else{
+          return $query->where('verificado', $verificado);
+        }
       }
     }
     public function scopeValido($query,$valido)
     {
       if(isset($valido) && $valido){
-        return $query->where('valido', $valido);
+        //validados
+        $query->where('valido', $valido);
+
+        if($valido=='1'){
+
+          $query->orWhere(function($q)
+          {
+            $q->whereNull('valido');
+            $q->where(function($q0){
+              //requeridos en PB
+              $q0->where('cCURP','!=','');
+              $q0->where('cArchivoFoto','!=','');
+              $q0->where('cArchivoAuto','!=','');
+
+              $q0->orWhere(function($q1){
+                $q1->where('cArchivoTerc','!=','');
+                $q1->where('cArchivoCapacitacion','!=','');
+              });
+            });
+          });
+        }
+        //incompletos
+        elseif($valido==2){
+          $query->orwhere('valido', 0);
+          //$query->where('valido', $valido);
+          $query->orWhere(function($q)
+          {
+            //$q->where('verificado','!=','1');
+            //requeridos
+            $q->where(function($q0){
+              $q0->where('verificado','!=','1');
+              $q0->orWhereNull('verificado');
+            });
+              $q->where('cCURP','=','');
+            $q->orWhere('cArchivoFoto','=','');
+            $q->orWhere('cArchivoAuto','=','');
+            $q->orWhere(function($q1){
+              $q1->where('cArchivoTerc','=','');
+              $q1->where('cArchivoCapacitacion','=','');
+            });
+          });
+        }else {
+          $query->where('valido', $valido);
+        }
+        return $query;
       }else {
         //$query->where('bTerminoProceso', 'FALSO');
         $query->whereNull('valido');
@@ -106,14 +158,50 @@ class BaseValidacion extends Model
         $val->calificacion=$this->dCalFinal;
         $val->acredito=0;
         $val->emisioncertificado=0;
+        $val->datospersonales=1;
         if($this->dCalFinal >= 6){
           $val->acredito=1;
         }
+        if($this->cCURP!='' && strlen(trim($this->cCURP))==18){
+          $val->curp=1;
+        }else{
+          $val->curp=0;
+        }
 
-        if(strpos(strtolower($val->nivel),'primaria')!== false)
-          $val->certificado=1;
+        if($this->cArchivoFoto!=''){
+          $val->foto=1;
+        }else{
+          $val->foto=0;
+        }
+        if($this->cArchivoAuto!=''){
+          $val->autoevaluacion=1;
+        }else{
+          $val->autoevaluacion=0;
+        }
+
+        if($this->cArchivoTerc!=''){
+          $val->terceros=1;
+        }
+        if($this->cArchivoCapacitacion!=''){
+          $val->aprendizaje=1;
+        }
+
+        //if(strpos(strtolower($val->nivel),'primaria')!== false)
+        $val->certificado=1;
         //$val->valido=0;
         $val->rfe=$this->cRFE;
+
+        //Se termina de validar el Proceso
+        if(($val->datospersonales==1 && $val->curp==1 && $val->certificado==1 && $val->foto==1 && $val->curp==1 && $val->foto==1 && $val->autoevaluacion==1 && ($val->terceros==1 || $val->aprendizaje==1))){
+          $val->valido=1;
+          $val->validadopor=3030;
+          $val->fechavalidacion=date("Y-m-d");
+        }
+        else{
+          $val->valido=2;
+          $val->validadopor=3030;
+          $val->fechavalidacion=date("Y-m-d");
+        }
         $val->save();
       };
       return $val;
@@ -142,7 +230,7 @@ class BaseValidacion extends Model
 
               $query->orWhere(function($q)
                       {
-                          $q->where('dCalFinal','>=',6)->where('cEstatusCertificado','')->where('bTerminoProceso','VERDADERO');
+                          $q->where('dCalFinal','>=',6)->where('cEstatusCertificado','')->where('bTerminoProceso','1');
                       });
               # code...
               break;

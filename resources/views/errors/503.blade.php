@@ -43,9 +43,13 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">No autorizado.</div>
-                <a href="{{url('/')}}" class="volver"><b>Volver al listado.</b></a>
+                <div class="title"><b>:)</b> <br>Estamos realizando una actualización.<br>Tardaremos pocos minutos...</div>
             </div>
         </div>
+        <script type="text/javascript">
+          window.setInterval(function() {
+            window.location.reload();
+          }, 5000);
+        </script>
     </body>
 </html>
