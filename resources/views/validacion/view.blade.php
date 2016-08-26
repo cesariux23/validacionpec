@@ -336,7 +336,7 @@
 @section('scripts')
 <script src="/sockets/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("{{URL::to('/')}}", {resource: 'sockets'});
+      var socket = io.connect("{{URL::to('/')}}", {resource: 'sockets/socket.io'});
       var registro = "{{$validacion->id}}";
       socket.on('connect', function() {
 
