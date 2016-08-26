@@ -425,6 +425,7 @@
       mensaje="<i class='fa fa-paper-plane'></i> Finalizado";
     }
     socket.emit('cambia estado', {rfe:rfe, mensaje:mensaje});
+    
   })();
 </script>
 @endsection

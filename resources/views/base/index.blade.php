@@ -118,7 +118,7 @@
 @section('scripts')
 <script src="/sockets/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("/sockets");
+      var socket = io.connect({resource: '/sockets'});
 
       socket.on('cambia estado', function(registro) {
         console.log(registro);
