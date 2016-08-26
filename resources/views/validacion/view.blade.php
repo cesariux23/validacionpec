@@ -1,6 +1,8 @@
 @extends('layouts.only-content')
 @section('content')
 <div class="container-fluid">
+  <div id="msj">
+  </div>
 {!! Form::open(array('route' => array('validacion.update', $validacion->id), 'method'=>'put')) !!}
     <div>
         <h2>
@@ -229,7 +231,6 @@
             <td>
               <button type="button" name="certificado" class="btn {{$validacion->certificado? 'btn-success':'btn-default'}} check" value="{{$validacion->certificado}}" onclick="postValidacion(event)"><i class="fa fa-{{$validacion->certificado? 'check':'square-o'}}"></i></button>
             </td>
-
           </tr>
           @endif
           <tr>
@@ -333,6 +334,24 @@
 @endsection
 
 @section('scripts')
+<script src="/sockets/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect();
+      var registro = "{{$validacion->id}}";
+      socket.on('connect', function() {
+
+         socket.emit('join', registro);
+      });
+
+      socket.on('join',function (usuarios) {
+        console.log(usuarios);
+        if(usuarios>1){
+          document.getElementById('msj').innerHTML='<div class="alert alert-danger">Existen <b>'+usuarios+' </b> usuarios validando este registro.</div>';
+        }else{
+          document.getElementById('msj').innerHTML="";
+        }
+      })
+    </script>
 <script type="text/javascript">
   var rfe='{{$validacion->rfe}}';
   var estado='{{$validacion->valido}}';
@@ -405,7 +424,7 @@
     if(finalizado=='1'){
       mensaje="<i class='fa fa-paper-plane'></i> Finalizado";
     }
-   console.log(window.opener.document.getElementById(rfe).innerHTML=mensaje);
+    socket.emit('cambia estado', {rfe:rfe, mensaje:mensaje});
   })();
 </script>
 @endsection

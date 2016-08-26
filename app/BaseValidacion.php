@@ -106,7 +106,7 @@ class BaseValidacion extends Model
         }
         //incompletos
         elseif($valido==2){
-          $query->orwhere('valido', 0);
+          $query->orwhere('valido', '0');
           //$query->where('valido', $valido);
           $query->orWhere(function($q)
           {

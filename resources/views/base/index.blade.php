@@ -116,12 +116,20 @@
 </div>
 @endsection
 @section('scripts')
+<script src="/sockets/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect();
+
+      socket.on('cambia estado', function(registro) {
+        console.log(registro);
+        var celda=document.getElementById(registro.rfe);
+        if(celda!=null){
+          celda.innerHTML=registro.mensaje;
+        }
+
+      });
+    </script>
 <script type="text/javascript">
-(function() {
-   //obtiene el cookie
-
-})();
-
 function cambiaCZ(event) {
   e=event.currentTarget;
   document.cookie="cz="+e.value;
