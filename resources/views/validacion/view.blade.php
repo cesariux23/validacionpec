@@ -336,7 +336,7 @@
 @section('scripts')
 <script src="/sockets/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("/sockets");
+      var socket = io.connect("{{URL::to('/')}}", {resource: 'sockets'});
       var registro = "{{$validacion->id}}";
       socket.on('connect', function() {
 
@@ -425,7 +425,7 @@
       mensaje="<i class='fa fa-paper-plane'></i> Finalizado";
     }
     socket.emit('cambia estado', {rfe:rfe, mensaje:mensaje});
-    
+
   })();
 </script>
 @endsection
