@@ -116,7 +116,7 @@
 </div>
 @endsection
 @section('scripts')
-<script src="/sockets/socket.io/socket.io.js"></script>
+<script src="/sockets/socket.io.js"></script>
     <script>
       var socket = io.connect("{{URL::to('/')}}", {resource: 'sockets/socket.io'});
 
