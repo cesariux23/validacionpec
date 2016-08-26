@@ -118,7 +118,7 @@
 @section('scripts')
 <script src="/sockets/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("{{URL::to('/')}}", {resource: 'sockets/socket.io'});
+      var socket = io.connect("{{URL::to('/')}}/sockets");
 
       socket.on('cambia estado', function(registro) {
         console.log(registro);
