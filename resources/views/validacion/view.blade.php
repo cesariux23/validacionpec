@@ -334,9 +334,9 @@
 @endsection
 
 @section('scripts')
-<script src="/sockets/socket.io/socket.io.js"></script>
+<script src="http://pec2.sistemasivea.tk/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("{{URL::to('/')}}", {resource: 'sockets/socket.io'});
+      var socket = io.connect("http://pec2.sistemasivea.tk");
       var registro = "{{$validacion->id}}";
       socket.on('connect', function() {
 

@@ -116,9 +116,9 @@
 </div>
 @endsection
 @section('scripts')
-<script src="/sockets/socket.io/socket.io.js"></script>
+<script src="http://pec2.sistemasivea.tk/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("{{URL::to('/')}}/sockets");
+      var socket = io.connect("http://pec2.sistemasivea.tk");
 
       socket.on('cambia estado', function(registro) {
         console.log(registro);
