@@ -102,6 +102,7 @@ class BaseController extends Controller
           ->where('dCalFinal','>=',6)
           ->valido($valido)
           ->verificado($verificado)
+          ->where('bTerminoProceso','<>','1')
           ->paginate(20);
 
           // Store or dump the log data...
