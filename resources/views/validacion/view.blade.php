@@ -334,9 +334,9 @@
 @endsection
 
 @section('scripts')
-<script src="http://pec.ivea.lan/socket.io/socket.io.js"></script>
+<script src="{{env('URL_SOCKET')}}/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("http://pec.ivea.lan");
+      var socket = io.connect("{{env('URL_SOCKET')}}");
       var registro = "{{$validacion->id}}";
       socket.on('connect', function() {
 
