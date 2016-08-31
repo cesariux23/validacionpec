@@ -161,7 +161,7 @@
           </td>
           @else
           <td colspan="2">
-            @if($registro->bTerminoProceso=='VERDADERO')
+            @if($registro->bTerminoProceso=='1')
             <h4><span class="label label-default">Proceso terminado en Power BI</span></h4>
 
             @else

@@ -317,7 +317,7 @@
           <button type="submit" name="valido" value="3" class="btn btn-warning sub"><i class="fa fa-copy"></i> Ya existente en SASA</button>
           @endif
           @if(Auth::user()->rol<2 && ($validacion->verificado || ($validacion->valido==3)) && !$validacion->emisioncertificado)
-          <button type="submit" name="verificado" value="0" class="btn btn-primary"><i class="fa fa-external-link"></i> Verificar nuevamente</button>
+          <button type="submit" name="verificado" value="0" class="btn btn-primary"><i class="fa fa-external-link"></i> Verificar registro</button>
           @endif
           @if( $validacion->valido<3 && !$validacion->verificado)
             <button type="submit" name="valido" value="0" class="btn btn-primary"><i class="fa fa-external-link"></i> Revalidar</button>
@@ -334,9 +334,9 @@
 @endsection
 
 @section('scripts')
-<script src="http://pec2.sistemasivea.tk/socket.io/socket.io.js"></script>
+<script src="http://pec.ivea.lan/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("http://pec2.sistemasivea.tk");
+      var socket = io.connect("http://pec.ivea.lan");
       var registro = "{{$validacion->id}}";
       socket.on('connect', function() {
 
@@ -404,10 +404,10 @@
   }
 
   (function() {
-    mensaje="Validando..";
+    mensaje="Espere..";
     switch (estado) {
       case '0':
-        mensaje="<i class='fa fa-clock-o'></i> Pendiente";
+        mensaje="<i class='fa fa-clock-o'></i> Trabajando";
         break;
       case '1':
         mensaje="<i class='fa fa-check'></i> Validado";
@@ -419,7 +419,7 @@
         mensaje="<i class='fa fa-copy'></i> Ya en SASA";
         break;
       default:
-
+      mensaje="<i class='fa fa-clock-o'></i> Trabajando";
     }
     if(finalizado=='1'){
       mensaje="<i class='fa fa-paper-plane'></i> Finalizado";

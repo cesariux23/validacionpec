@@ -30,6 +30,10 @@ class BaseController extends Controller
         $verificado=null;
         $titulo="Registro pendientes de validación";
         $ruta=$request->route()->getName();
+        
+        if(Auth::user()->rol==2){
+            $ruta='base.pendientes.index';
+        }
         switch ($ruta) {
           case 'base.pendientes.index':
           $titulo="Registro pendientes";
@@ -40,7 +44,7 @@ class BaseController extends Controller
             $valido=2;
             break;
           case 'base.validos.index':
-            $titulo="<span class='text-info'><i class='fa fa-check'></i></span> Pendientes de verificación";
+            $titulo="<span class='text-info'><i class='fa fa-clock-o'></i></span> Pendientes de finalizar";
             $valido=1;
             $verificado=0;
             break;

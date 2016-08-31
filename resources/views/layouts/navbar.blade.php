@@ -23,10 +23,12 @@
             <ul class="nav navbar-nav">
               @if(Auth::user()->rol<3)
 
-                <li><a href="{{ route('base.incompletos.index') }}"><i class="fa fa-warning"></i> Expedientes incompletos</a></li>
+                <li><a href="{{ route('base.incompletos.index') }}"><i class="fa fa-warning text-danger"></i> Incompletos</a></li>
+                @if(Auth::user()->rol <2)
                 <li><a href="{{ route('base.ensasa.index') }}"><i class="fa fa-copy"></i> Ya en SASA</a></li>
-                <li><a href="{{ route('base.validos.index') }}"><i class="fa fa-check"></i> Pendientes de verificacion</a></li>
-                <li><a href="{{ route('base.finalizados.index') }}"><i class="fa fa-paper-plane"></i> Proceso finalizado</a></li>
+                <li><a href="{{ route('base.validos.index') }}"><i class='fa fa-clock-o text-primary'></i> Pendientes de finalizar</a></li>
+                <li><a href="{{ route('base.finalizados.index') }}"><i class="fa fa-paper-plane text-success"></i> Proceso finalizado</a></li>
+                @endif
                 @if(Auth::user()->rol==0)
                 <li><a href="{{ route('importar.base') }}"><i class="fa fa-upload"></i> Importar validación</a></li>
                 @endif

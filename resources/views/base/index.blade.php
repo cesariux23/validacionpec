@@ -87,19 +87,17 @@
               <a href="{{route('validacion.edit', $registro->idValidacion)}}" class="btn btn-info ventanavalidar">Ver</a>
               @endif
               @elseif($registro->valido==1 && $registro->verificado==0)
-              <a href="{{route('validacion.edit', $registro->idValidacion)}}" class="btn btn-info ventanavalidar">Verificar</a>
-              @elseif($registro->valido>1)
-              <a href="{{route('validacion.edit', $registro->idValidacion)}}" class="btn btn-info ventanavalidar">Detalles</a>
+              <a href="{{route('validacion.edit', $registro->idValidacion)}}" class="btn btn-info ventanavalidar">Finalizar</a>
+              @elseif($registro->valido==2)
+              <a href="{{route('validacion.edit', $registro->idValidacion)}}" class="btn btn-default ventanavalidar"><span class="text-primary"><i class="fa fa-external-link"></i> Revalidar</span></a>
+              @elseif($registro->valido==3)
+              <a href="{{route('validacion.edit', $registro->idValidacion)}}" class="btn btn-info ventanavalidar">Ver</a>
               @else
-              <a href="{{route('validacion.edit', $registro->idValidacion)}}" class="btn btn-info ventanavalidar">Continuar</a>
+              <a href="{{route('validacion.edit', $registro->idValidacion)}}" class="btn btn-default ventanavalidar">Continuar</a>
               @endif
               <br>
               @if($registro->valido==1 && $registro->verificado==1)
               <span class="label label-success">Finalizado</span>
-              @elseif($registro->valido==1)
-              <span class="label label-default">Validado</span>
-              @elseif($registro->valido==2)
-              <span class="label label-danger">Incompleto</span>
               @elseif($registro->valido==3)
               <span class="label label-warning">En SASA</span>
               @endif
@@ -116,9 +114,9 @@
 </div>
 @endsection
 @section('scripts')
-<script src="http://pec2.sistemasivea.tk/socket.io/socket.io.js"></script>
+<script src="{{env('URL_SOCKET')}}/socket.io/socket.io.js"></script>
     <script>
-      var socket = io.connect("http://pec2.sistemasivea.tk");
+      var socket = io.connect("{{env('URL_SOCKET')}}");
 
       socket.on('cambia estado', function(registro) {
         console.log(registro);
