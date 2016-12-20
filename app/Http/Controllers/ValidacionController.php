@@ -67,7 +67,7 @@ class ValidacionController extends Controller
     {
       //$validacion=BaseValidacion::find($id);
       $validacion=Validacion::find($id);
-      $base=BaseValidacion::select('cCURP','cArchivoFoto')->where('idvalidacion',$id)->first();
+      $base=BaseValidacion::select('cCURP','cArchivoFoto', 'cArchivoAuto', 'cArchivoTerc')->where('idvalidacion',$id)->first();
 
       return view('validacion/view')->with(['validacion'=>$validacion, 'base'=>$base]);
     }

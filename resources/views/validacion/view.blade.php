@@ -330,6 +330,50 @@
     @endif
   </div>
 {!! Form::close() !!}
+<hr>
+    <div class="row">
+      <div class="col-xs-4">
+      @if($base->cArchivoFoto)
+        <span>Fotografía</span>
+        <br>
+        <a href="http://siga.inea.gob.mx/Figuras/Fotografias/{{$base->cArchivoFoto}}" title="Abrir en una venta nueva" target="blank_">
+          <img src="http://siga.inea.gob.mx/Figuras/Fotografias/{{$base->cArchivoFoto}}" width="150px"
+        </a>
+        @else
+          <div class="alert alert-info">
+            Sin  archivo de Fotografía
+          </div>
+      @endif
+      </div>
+
+      <div class="col-xs-4">
+      @if($base->cArchivoAuto)
+        <span>Autoevaluación</span>
+        <br>
+        <a href="http://siga.inea.gob.mx/Figuras/ArchivoRubrica/{{$base->cArchivoAuto}}" title="Abrir en una venta nueva" target="blank_">
+          <img src="http://siga.inea.gob.mx/Figuras/ArchivoRubrica/{{$base->cArchivoAuto}}" width="150px"
+        </a>
+        @else
+          <div class="alert alert-info">
+            Sin archivo de autoevaluación
+          </div>
+      @endif
+      </div>
+
+      <div class="col-xs-4">
+      @if($base->cArchivoTerc)
+        <span>Rubica de Terceros</span>
+        <br>
+        <a href="http://siga.inea.gob.mx/Figuras/ArchivoRubrica/{{$base->cArchivoTerc}}" title="Abrir en una venta nueva" target="blank_">
+          <img src="http://siga.inea.gob.mx/Figuras/ArchivoRubrica/{{$base->cArchivoTerc}}" width="150px"
+        </a>
+        @else
+          <div class="alert alert-info">
+            Sin archivo de Rubica de Terceros
+          </div>
+      @endif
+      </div>
+    </div>
 </div>
 @endsection
 

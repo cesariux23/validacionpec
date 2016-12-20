@@ -138,7 +138,7 @@ $('.ventanavalidar').on('click',function(event){
     event.preventDefault(event);
     e=event.currentTarget;
     //var myWindow = window.open(e.href,'Validación de registro', "width=200, height=100,width=750,height=780");
-    var myWindow = window.open(e.href,'Validación de registro', "width=750,height=600");
+    var myWindow = window.open(e.href,'Validación de registro', "width=750,height=800");
     //location.reload();
     $(e).parent().html("Trabajando ..");
     //return false;
